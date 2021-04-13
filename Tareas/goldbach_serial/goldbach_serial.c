@@ -153,7 +153,7 @@ void goldbach(long long int num){
         printf ("%lld: NA ",num);
     }
     else{
-            if(num == 2)
+            if( num <= 5 || num >= -5 )
             {
                 printf("%i: NA\n", num);
             }
@@ -194,13 +194,6 @@ int main(void) {
         printf("\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
         scanf("%lld", &num);
 
-        /*
-        while(num > pow(2, 62)-1)
-        {
-            printf("\nEste numero se pasa de los limites, por favor ingresar otro\n");
-            scanf("%lld", &num);
-        }
-        */
         printf("\n");
         goldbach(num);
 
