@@ -26,5 +26,5 @@
 *.a
 *.lib
 
+*.exe
 .vscode
-test
