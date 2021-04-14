@@ -133,7 +133,7 @@ int es_alpha(char *dato_entrada) {
  * @return void
  */
 void goldbach(int64_t num) {
-    if (num > pow(2, 63) - 1 || num < -pow(2, 63) - 1 || (num <= 5 && num >= -5)) {
+    if ((num <= 5 && num >= -5)) {
         printf("%ld: NA\n", num);
     } else {
         if (par_impar(num) == 1) {
@@ -156,14 +156,15 @@ void iniciar() {
     while (opcion == 1) {
         printf("\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
         scanf("%s", dato_entrada);
-
+    
         if (es_alpha(dato_entrada)== 0) {
             int64_t num = atol(dato_entrada);
 
-            goldbach(num);
-            printf("\n");
-            printf("\n\nDesea continuar?   || 1=Si || 0=No ||\n");
-            scanf("%d", &opcion);
+            if(num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63 -1 ))){
+                printf("NA\n");
+            }else{
+                goldbach(num);
+            }
 
         } else {
             opcion = 0;
