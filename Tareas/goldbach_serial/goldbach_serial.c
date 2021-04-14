@@ -154,7 +154,7 @@ void iniciar() {
     int opcion = 1;
 
     while (opcion == 1) {
-        printf("\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
+        printf("\n\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
         scanf("%s", dato_entrada);
     
         if (es_alpha(dato_entrada)== 0) {
