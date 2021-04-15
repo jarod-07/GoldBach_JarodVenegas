@@ -133,13 +133,17 @@ int es_alpha(char *dato_entrada) {
  * @return void
  */
 void goldbach(int64_t num) {
-    if ((num <= 5 && num >= -5)) {
-        printf("%ld: NA\n", num);
+    if (num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63) - 1)) {
+        printf("NA");
     } else {
-        if (par_impar(num) == 1) {
-            conjetura_fuerte(num);
+        if ((num <= 5 && num >= -5)) {
+            printf("%ld: NA\n", num);
         } else {
-            conjetura_debil(num);
+            if (par_impar(num) == 1) {
+                conjetura_fuerte(num);
+            } else {
+                conjetura_debil(num);
+            }
         }
     }
 }
@@ -156,16 +160,9 @@ void iniciar() {
     while (opcion == 1) {
         printf("\n\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
         scanf("%s", dato_entrada);
-    
-        if (es_alpha(dato_entrada)== 0) {
+        if (es_alpha(dato_entrada) == 0) {
             int64_t num = atol(dato_entrada);
-
-            if(num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63 -1 ))){
-                printf("NA\n");
-            }else{
-                goldbach(num);
-            }
-
+            goldbach(num);
         } else {
             opcion = 0;
         }
