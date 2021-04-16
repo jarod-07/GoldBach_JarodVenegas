@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief EStructura utilizada para almacenar las sumas y luego imprimirlas
+ *
+ */
 struct Pair {
     int64_t first;
     int64_t second;
@@ -26,7 +30,7 @@ struct Pair {
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int es_primo(int64_t num) {
-    for (int64_t i = 2; i <= num / 2; i++) {
+    for (int64_t i = 2; i < num; i++) {
         if (num % i == 0) {
             return 0;  // no es primo
         }
@@ -64,44 +68,45 @@ void conjetura_fuerte(int64_t num_temp) {
     }
 
     int64_t contador = 0;
-    int64_t temp = 2;
+    // int64_t temp = 2;
     int tamano = 10;
 
-    struct Pair *mapa = (struct Pair *)calloc(tamano, sizeof(struct Pair));
+    struct Pair *sumas = (struct Pair *)calloc(tamano, sizeof(struct Pair));
 
-    for (int64_t i = numero - temp; i > 2; i--) {
-        if (es_primo(temp) == 1 && es_primo(i) == 1 && temp <= i) {
-            if (num_temp < 0) {
-                mapa[contador].first = (int64_t)i;
-                mapa[contador].second = (int64_t)temp;
+    for (int64_t i = 2; i < numero; i++) {
+        if (es_primo(i) == 1) {
+            for (int64_t j = i; j < numero; j++) {
+                if (i + j == numero && es_primo(j) == 1) {
+                    if (num_temp < 0) {
+                        sumas[contador].first = (int64_t)i;
+                        sumas[contador].second = (int64_t)j;
+                    }
+                    contador++;
+                    if (contador == tamano && num_temp < 0) {
+                        tamano = tamano * 2;
+                        struct Pair *sumas_temp =
+                            realloc(sumas, (tamano * 2) * sizeof(struct Pair));
+                        if (sumas_temp == NULL) {
+                            printf("Memory not reallocated\n");
+                            exit(0);
+                        } else {
+                            sumas = sumas_temp;
+                        }
+                    }
+                }
             }
-            contador++;
-        }
-        temp++;
-    }
-
-    if (contador == tamano && num_temp < 0) {
-        tamano = tamano * 2;
-        struct Pair *mapa_nuevo =
-            realloc(mapa, (tamano * 2) * sizeof(struct Pair));
-        if (mapa_nuevo == NULL) {
-            printf("Memory not reallocated\n");
-            exit(0);
-        } else {
-            mapa = mapa_nuevo;
         }
     }
-
     if (num_temp < 0) {
         printf("-%ld: %ld sums : ", numero, contador);
 
         for (int i = 0; i < contador; i++) {
-            printf("-%ld + %ld, ", mapa[i].second, mapa[i].first);
+            printf("%ld + %ld, ", sumas[i].first, sumas[i].second);
         }
     } else {
         printf("%ld: %ld sums: ", numero, contador);
     }
-    free(mapa);
+    free(sumas);
 }
 /**
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
@@ -120,7 +125,7 @@ void conjetura_debil(int64_t num_temp) {
     int64_t contador = 0;
     int tamano = 10;
 
-    struct Pair *mapa = (struct Pair *)calloc(tamano, sizeof(struct Pair));
+    struct Pair *sumas = (struct Pair *)calloc(tamano, sizeof(struct Pair));
 
     for (int64_t x = 2; x < numero; x++) {
         if (es_primo(x) == 1) {
@@ -129,11 +134,22 @@ void conjetura_debil(int64_t num_temp) {
                     for (int64_t z = y; z < numero; z++) {
                         if (x + y + z == numero && es_primo(z) == 1) {
                             if (num_temp < 0) {
-                                mapa[contador].first = (int64_t)x;
-                                mapa[contador].second = (int64_t)y;
-                                mapa[contador].third = (int64_t)z;
+                                sumas[contador].first = (int64_t)x;
+                                sumas[contador].second = (int64_t)y;
+                                sumas[contador].third = (int64_t)z;
                             }
                             contador++;
+                            if (contador == tamano && num_temp < 0) {
+                                tamano = tamano * 2;
+                                struct Pair *sumas_temp = realloc(
+                                    sumas, (tamano * 2) * sizeof(struct Pair));
+                                if (sumas_temp == NULL) {
+                                    printf("Memory not reallocated\n");
+                                    exit(0);
+                                } else {
+                                    sumas = sumas_temp;
+                                }
+                            }
                         }
                     }
                 }
@@ -141,30 +157,18 @@ void conjetura_debil(int64_t num_temp) {
         }
     }
 
-    if (contador == tamano && num_temp < 0) {
-        tamano = tamano * 2;
-        struct Pair *mapa_nuevo =
-            realloc(mapa, (tamano * 2) * sizeof(struct Pair));
-        if (mapa_nuevo == NULL) {
-            printf("Memory not reallocated\n");
-            exit(0);
-        } else {
-            mapa = mapa_nuevo;
-        }
-    }
-
     if (num_temp < 0) {
         printf("- %ld: %ld sums : ", numero, contador);
 
         for (int i = 0; i < contador; i++) {
-            printf("%ld + %ld + %ld, ", mapa[i].first, mapa[i].second,
-                   mapa[i].third);
+            printf("%ld + %ld + %ld, ", sumas[i].first, sumas[i].second,
+                   sumas[i].third);
         }
     } else {
         printf("%ld: %ld sums: ", numero, contador);
     }
 
-    free(mapa);
+    free(sumas);
 }
 
 /**
