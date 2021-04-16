@@ -104,7 +104,7 @@ void conjetura_fuerte(int64_t num_temp) {
             printf("%ld + %ld, ", sumas[i].first, sumas[i].second);
         }
     } else {
-        printf("%ld: %ld sums: ", numero, contador);
+        printf("%ld: %ld sums", numero, contador);
     }
     free(sumas);
 }
@@ -158,14 +158,14 @@ void conjetura_debil(int64_t num_temp) {
     }
 
     if (num_temp < 0) {
-        printf("- %ld: %ld sums : ", numero, contador);
+        printf("-%ld: %ld sums : ", numero, contador);
 
         for (int i = 0; i < contador; i++) {
             printf("%ld + %ld + %ld, ", sumas[i].first, sumas[i].second,
                    sumas[i].third);
         }
     } else {
-        printf("%ld: %ld sums: ", numero, contador);
+        printf("%ld: %ld sums", numero, contador);
     }
 
     free(sumas);
