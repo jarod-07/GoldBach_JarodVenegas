@@ -10,7 +10,9 @@
  */
 
 #include <ctype.h>
+#include <inttypes.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,7 +60,7 @@ int par_impar(int64_t num) {
  * @param numero entero
  * @return void
  */
-void conjetura_fuerte(int64_t num_temp) {
+void conjetura_fuerte(int64_t num_temp, FILE *output) {
     int64_t numero = 0;
 
     if (num_temp < 0) {
@@ -87,7 +89,7 @@ void conjetura_fuerte(int64_t num_temp) {
                         struct Pair *sumas_temp =
                             realloc(sumas, (tamano * 2) * sizeof(struct Pair));
                         if (sumas_temp == NULL) {
-                            printf("Memory not reallocated\n");
+                            fprintf(output, "Memory not reallocated\n");
                             exit(0);
                         } else {
                             sumas = sumas_temp;
@@ -97,14 +99,40 @@ void conjetura_fuerte(int64_t num_temp) {
             }
         }
     }
-    if (num_temp < 0) {
-        printf("-%ld: %ld sums : ", numero, contador);
 
+    int64_t primera;
+    int64_t segunda;
+    if (num_temp < 0) {
+        fprintf(output,
+                "-%" PRIu64
+                ": "
+                "%" PRIu64 " sums: ",
+                numero, contador);
         for (int i = 0; i < contador; i++) {
-            printf("%ld + %ld, ", sumas[i].first, sumas[i].second);
+            if (i != contador - 1) {
+                primera = sumas[i].first;
+                segunda = sumas[i].second;
+                fprintf(output,
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64 ", ",
+                        primera, segunda);
+            } else {
+                primera = sumas[i].first;
+                segunda = sumas[i].second;
+                fprintf(output,
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64 "\n",
+                        primera, segunda);
+            }
         }
     } else {
-        printf("%ld: %ld sums", numero, contador);
+        fprintf(output,
+                "%" PRIu64
+                ": "
+                "%" PRIu64 " sums\n",
+                numero, contador);
     }
     free(sumas);
 }
@@ -113,7 +141,7 @@ void conjetura_fuerte(int64_t num_temp) {
  * @param numero entero
  * @return void
  */
-void conjetura_debil(int64_t num_temp) {
+void conjetura_debil(int64_t num_temp, FILE *output) {
     int64_t numero = 0;
 
     if (num_temp < 0) {
@@ -144,7 +172,7 @@ void conjetura_debil(int64_t num_temp) {
                                 struct Pair *sumas_temp = realloc(
                                     sumas, (tamano * 2) * sizeof(struct Pair));
                                 if (sumas_temp == NULL) {
-                                    printf("Memory not reallocated\n");
+                                    fprintf(output, "Memory not reallocated\n");
                                     exit(0);
                                 } else {
                                     sumas = sumas_temp;
@@ -157,39 +185,48 @@ void conjetura_debil(int64_t num_temp) {
         }
     }
 
+    int64_t primera;
+    int64_t segunda;
+    int64_t tercera;
     if (num_temp < 0) {
-        printf("-%ld: %ld sums : ", numero, contador);
-
+        fprintf(output,
+                "-%" PRIu64
+                ": "
+                "%" PRIu64 " sums: ",
+                numero, contador);
         for (int i = 0; i < contador; i++) {
-            printf("%ld + %ld + %ld, ", sumas[i].first, sumas[i].second,
-                   sumas[i].third);
+            if (i != contador - 1) {
+                primera = sumas[i].first;
+                segunda = sumas[i].second;
+                tercera = sumas[i].third;
+                fprintf(output,
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64 ", ",
+                        primera, segunda, tercera);
+            } else {
+                primera = sumas[i].first;
+                segunda = sumas[i].second;
+                tercera = sumas[i].third;
+                fprintf(output,
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64
+                        " + "
+                        "%" PRIu64 "\n",
+                        primera, segunda, tercera);
+            }
         }
     } else {
-        printf("%ld: %ld sums", numero, contador);
+        fprintf(output,
+                "%" PRIu64
+                ": "
+                "%" PRIu64 " sums\n",
+                numero, contador);
     }
-
     free(sumas);
-}
-
-/**
- * @brief Determina si el dato ingresado es un caracter alfabetico
- * @param char
- * @return void
- */
-int es_alpha(char *dato_entrada) {
-    int tamano = strlen(dato_entrada);
-    int ptr = 0;
-
-    if (dato_entrada[0] == '-') {
-        ptr = 1;
-    }
-
-    for (int i = ptr; i < tamano; i++) {
-        if (isalpha(dato_entrada[i])) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 /**
@@ -198,17 +235,17 @@ int es_alpha(char *dato_entrada) {
  * @param numero entero
  * @return void
  */
-void goldbach(int64_t num) {
+void goldbach(int64_t num, FILE *output) {
     if (num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63) - 1)) {
-        printf("NA");
+        fprintf(output, "NA");
     } else {
         if ((num <= 5 && num >= -5)) {
-            printf("%ld: NA\n", num);
+            fprintf(output, "%ld :NA\n", num);
         } else {
             if (par_impar(num) == 1) {
-                conjetura_fuerte(num);
+                conjetura_fuerte(num, output);
             } else {
-                conjetura_debil(num);
+                conjetura_debil(num, output);
             }
         }
     }
@@ -219,19 +256,10 @@ void goldbach(int64_t num) {
  * @param -
  * @return void
  */
-void iniciar() {
-    char dato_entrada[100];
-    int opcion = 1;
-
-    while (opcion == 1) {
-        printf("\n\nIngrese un digito mayor de 5 o menor de -5: \nNumero: ");
-        scanf("%s", dato_entrada);
-        if (es_alpha(dato_entrada) == 0) {
-            int64_t num = atol(dato_entrada);
-            goldbach(num);
-        } else {
-            opcion = 0;
-        }
+void iniciar(FILE *input, FILE *output) {
+    int64_t num;
+    while (fscanf(input, "%" SCNu64, &num) == 1) {
+        goldbach(num, output);
     }
 }
 
@@ -239,7 +267,9 @@ void iniciar() {
  * @return El menu del progama de la Conjetura De GoldBach
  */
 int main(void) {
-    iniciar();
+    FILE *input = stdin;
+    FILE *output = stdout;
+    iniciar(input, output);
 
     return 0;
 }
