@@ -21,7 +21,7 @@
  * @brief EStructura utilizada para almacenar las sumas y luego imprimirlas
  *
  */
-struct Pair {
+struct Sumas {
     int64_t first;
     int64_t second;
     int64_t third;
@@ -73,7 +73,7 @@ void conjetura_fuerte(int64_t num_temp, FILE *output) {
     // int64_t temp = 2;
     int tamano = 10;
 
-    struct Pair *sumas = (struct Pair *)calloc(tamano, sizeof(struct Pair));
+    struct Sumas *sumas = (struct Sumas *)calloc(tamano, sizeof(struct Sumas));
 
     for (int64_t i = 2; i < numero; i++) {
         if (es_primo(i) == 1) {
@@ -86,8 +86,8 @@ void conjetura_fuerte(int64_t num_temp, FILE *output) {
                     contador++;
                     if (contador == tamano && num_temp < 0) {
                         tamano = tamano * 2;
-                        struct Pair *sumas_temp =
-                            realloc(sumas, (tamano * 2) * sizeof(struct Pair));
+                        struct Sumas *sumas_temp =
+                            realloc(sumas, (tamano * 2) * sizeof(struct Sumas));
                         if (sumas_temp == NULL) {
                             fprintf(output, "Memory not reallocated\n");
                             exit(0);
@@ -153,7 +153,7 @@ void conjetura_debil(int64_t num_temp, FILE *output) {
     int64_t contador = 0;
     int tamano = 10;
 
-    struct Pair *sumas = (struct Pair *)calloc(tamano, sizeof(struct Pair));
+    struct Sumas *sumas = (struct Sumas *)calloc(tamano, sizeof(struct Sumas));
 
     for (int64_t x = 2; x < numero; x++) {
         if (es_primo(x) == 1) {
@@ -169,8 +169,8 @@ void conjetura_debil(int64_t num_temp, FILE *output) {
                             contador++;
                             if (contador == tamano && num_temp < 0) {
                                 tamano = tamano * 2;
-                                struct Pair *sumas_temp = realloc(
-                                    sumas, (tamano * 2) * sizeof(struct Pair));
+                                struct Sumas *sumas_temp = realloc(
+                                    sumas, (tamano * 2) * sizeof(struct Sumas));
                                 if (sumas_temp == NULL) {
                                     fprintf(output, "Memory not reallocated\n");
                                     exit(0);
@@ -258,8 +258,17 @@ void goldbach(int64_t num, FILE *output) {
  */
 void iniciar(FILE *input, FILE *output) {
     int64_t num;
+    int tamano = 10;
+    int contador = 0;
+    int *valores = (int *)calloc(tamano, sizeof(int));
+
     while (fscanf(input, "%" SCNu64, &num) == 1) {
-        goldbach(num, output);
+        valores[contador] = num;
+        contador++;
+    }
+
+    for (int x = 0; x < contador; x++) {
+        goldbach(valores[x], output);
     }
 }
 
