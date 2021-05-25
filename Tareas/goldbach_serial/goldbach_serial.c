@@ -259,17 +259,30 @@ void goldbach(int64_t num, FILE *output) {
 void iniciar(FILE *input, FILE *output) {
     int64_t num;
     int tamano = 10;
-    int contador = 0;
+    int contador = 1;
     int *valores = (int *)calloc(tamano, sizeof(int));
-
     while (fscanf(input, "%" SCNu64, &num) == 1) {
-        valores[contador] = num;
+        
+        if (contador == tamano) {
+            //tamano = tamano * 2;
+            valores = (int *)realloc(valores, (tamano*2) * sizeof(int));
+            if (valores == NULL) {
+                fprintf(output, "Memory not reallocated\n");
+                exit(0);
+            } else {
+                tamano = tamano * 2;
+                valores[contador]=num;
+            }
+        }else{
+            valores[contador] = num;
+        }
+        
         contador++;
     }
-
-    for (int x = 0; x < contador; x++) {
+    for (int x = 1; x < contador; x++) {
         goldbach(valores[x], output);
     }
+    free(valores);
 }
 
 /**
