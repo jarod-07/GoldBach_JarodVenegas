@@ -73,31 +73,29 @@ Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
     int tamano = 10;
 
     Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
-
-    for (int64_t i = 2; i < numero; i++) {
-        if (es_primo(i) == 1) {
-            for (int64_t j = i; j < numero; j++) {
-                if (i + j == numero && es_primo(j) == 1) {
-                    if (num_temp < 0) {
-                        sumas[*contador].first = (int64_t)i;
-                        sumas[*contador].second = (int64_t)j;
-                    }
-                    *contador = *contador + 1;
-                    if (*contador == tamano && num_temp < 0) {
-                        tamano = tamano * 2;
-                        Sumas* sumas_temp =
-                            realloc(sumas, (tamano * 2) * sizeof(Sumas));
-                        if (sumas_temp == NULL) {
-                            fprintf(output, "Memory not reallocated\n");
-                            exit(0);
-                        } else {
-                            sumas = sumas_temp;
-                        }
-                    }
+    int64_t pivote = 2;
+    for (int64_t i = numero - pivote; i > 2; i--) {
+        if ((es_primo(pivote) == 1) && (es_primo(i) == 1)) {
+            if (numero < 0) {
+                sumas[*contador].first = (int64_t)pivote;
+                sumas[*contador].second = (int64_t)i;
+            }
+            *contador = *contador + 1;
+            if (*contador == tamano && numero < 0) {
+                tamano = tamano * 2;
+                Sumas* sumas_temp =
+                    realloc(sumas, (tamano * 2) * sizeof(Sumas));
+                if (sumas_temp == NULL) {
+                    fprintf(output, "Memory not reallocated\n");
+                    exit(0);
+                } else {
+                    sumas = sumas_temp;
                 }
             }
         }
+        pivote++;
     }
+
     return sumas;
 }
 
@@ -116,21 +114,22 @@ Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
     } else {
         numero = num_temp;
     }
-
     int tamano = 10;
-
     Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
 
-    for (int64_t x = 2; x < numero; x++) {
-        if (es_primo(x) == 1) {
-            for (int64_t y = x; y < numero; y++) {
-                if (es_primo(y) == 1) {
-                    for (int64_t z = y; z < numero; z++) {
-                        if (x + y + z == numero && es_primo(z) == 1) {
+    for (int64_t i = 2; i < numero; i++) {
+        if (es_primo(i) == 1) {
+            for (int64_t j = i; j < numero; j++) {
+                if (es_primo(j)) {
+                    int64_t numero_posible = numero - (i + j);
+                    if (i + j + numero_posible == numero &&
+                        es_primo(numero_posible)) {
+                        if (numero_posible > 2 && numero_posible >= j) {
                             if (num_temp < 0) {
-                                sumas[*contador].first = (int64_t)x;
-                                sumas[*contador].second = (int64_t)y;
-                                sumas[*contador].third = (int64_t)z;
+                                sumas[*contador].first = (int64_t)i;
+                                sumas[*contador].second = (int64_t)j;
+                                sumas[*contador].third =
+                                    (int64_t)numero_posible;
                             }
                             *contador = *contador + 1;
                             if (*contador == tamano && num_temp < 0) {
@@ -144,12 +143,13 @@ Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
                                     sumas = sumas_temp;
                                 }
                             }
-                        }
+                       }
                     }
                 }
             }
         }
     }
+
     return sumas;
 }
 
@@ -278,10 +278,12 @@ void goldbach(int64_t num, FILE* output) {
                 Sumas* sumas_pares =
                     conjetura_fuerte(num, &contador_sumas, output);
                 imprimir_fuerte(num, contador_sumas, sumas_pares, output);
+                free(sumas_pares);
             } else {
                 Sumas* sumas_impares =
                     conjetura_debil(num, &contador_sumas, output);
                 imprimir_debil(num, contador_sumas, sumas_impares, output);
+                free(sumas_impares);
             }
         }
     }
@@ -310,7 +312,6 @@ void iniciar(FILE* input, FILE* output) {
         } else {
             valores[contador] = num;
         }
-
         contador++;
     }
     for (int x = 0; x < contador; x++) {
