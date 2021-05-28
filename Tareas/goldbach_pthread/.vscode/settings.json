@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "goldbach_pthread1.h": "c",
-        "unistd.h": "c",
-        "semaphore.h": "c"
-    }
-}
