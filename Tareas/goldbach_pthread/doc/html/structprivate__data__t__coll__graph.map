@@ -1,7 +1,0 @@
-<map id="private_data_t" name="private_data_t">
-<area shape="rect" id="node1" title="Estructura utilizada para alamcenar los datos privados de los hilos." alt="" coords="35,288,151,315"/>
-<area shape="rect" id="node2" href="$structshared__data__t.html" title="Estructura utilizada para almacenar los datos compartidos entre la n cantidad de hilos." alt="" coords="36,199,151,225"/>
-<area shape="rect" id="node3" href="$structSums.html" title="Estructura utilizada para almacenar las sumas y luego imprimirlas." alt="" coords="5,109,64,136"/>
-<area shape="rect" id="node4" href="$structqueue__t.html" title=" " alt="" coords="116,109,191,136"/>
-<area shape="rect" id="node5" href="$structqueue__node.html" title=" " alt="" coords="103,5,204,32"/>
-</map>
