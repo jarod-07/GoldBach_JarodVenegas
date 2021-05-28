@@ -1,0 +1,111 @@
+shared_data {
+    input
+    output
+    sums_vector
+    numbers_queue
+    number_counter
+    thread_position
+    sem_get_position
+    number_of_threads
+}
+
+private_data {
+    position
+    shared_data
+    goldbach_number
+}
+
+main(argc, argv[]):
+    if(shared)
+        shared_data input := stdin
+        shared_data output := stdout
+        shared_data thread_position := 0
+        shared_data number_counter := 0
+        shared_data number_of_threads := number_of_processors
+        shared_data sums_vector = create_struc_sums_vector
+
+        if(argc == 2)
+            shared_data number_of_threads := integer(argv[1])
+        end if
+
+        input_number(shared_data)
+        create_threads(shared_data number_counter, run_thread)
+        
+        print(shared_data sums_vector)
+        
+        free(shared_data sums_vector)
+        free(shared_data numbers_queue)
+        free(shared_data)
+    end if
+
+run_thread:
+    while !queue_is_empty do
+        wait(shared_data sem_get_position)
+
+        valor := queue_dequeue(shared_data numbers_queue)
+        private_data goldbach_number := valor
+
+        private_data position := shared_data thread_position
+        shared_data thread_position++
+
+        signal(shared_data sem_get_position)
+        goldbach(private_data goldbach_number)
+    end while
+
+input_number:
+    int num := 0
+    shared_data numbers_queue := create_integer_queue
+    if(shared_data numbers_queue)
+        while scan(shared_data input, "%", num)==1 do
+            queue_enqueue(shared_data numbers_queue, num)
+            shared data number_counter++
+        end while   
+    end if
+
+-----------Ejemplos--------------
+
+thread 1:
+    run_thread:
+        while !queue_is_empty do
+            wait(shared_data sem_get_position)
+
+            valor := queue_dequeue(shared_data numbers_queue)
+            private_data goldbach_number := valor
+
+            private_data position := shared_data thread_position
+            shared_data thread_position++
+
+            signal(shared_data sem_get_position)
+            goldbach(private_data goldbach_number)
+        end while
+
+thread 2:
+    run_thread:
+        while !queue_is_empty do
+            wait(shared_data sem_get_position)
+
+            valor := queue_dequeue(shared_data numbers_queue)
+            private_data goldbach_number := valor
+
+            private_data position := shared_data thread_position
+            shared_data thread_position++
+
+            signal(shared_data sem_get_position)
+            goldbach(private_data goldbach_number)
+        end while
+
+thread 3:
+    run_thread:
+        while !queue_is_empty do
+            wait(shared_data sem_get_position)
+
+            valor := queue_dequeue(shared_data numbers_queue)
+            private_data goldbach_number := valor
+
+            private_data position := shared_data thread_position
+            shared_data thread_position++
+
+            signal(shared_data sem_get_position)
+            goldbach(private_data goldbach_number)
+        end while
+

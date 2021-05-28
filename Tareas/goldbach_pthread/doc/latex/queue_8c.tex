@@ -1,0 +1,83 @@
+\hypertarget{queue_8c}{}\doxysection{queue.\+c File Reference}
+\label{queue_8c}\index{queue.c@{queue.c}}
+{\ttfamily \#include \char`\"{}queue.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+Include dependency graph for queue.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{queue_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{queue_8c_a0bfcaddf49f3baf335ca468f9adb2292}{queue\+\_\+remove\+\_\+first\+\_\+unsafe}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\item 
+bool \mbox{\hyperlink{queue_8c_a22ceeb725e700e559fcedebe014e71f0}{queue\+\_\+is\+\_\+empty\+\_\+unsafe}} (const \mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\item 
+int \mbox{\hyperlink{queue_8c_a8f5abe559cd352d91efb79bc6e1788de}{queue\+\_\+init}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\item 
+int \mbox{\hyperlink{queue_8c_a4198ce0ca91b3c5f3d276d3550354196}{queue\+\_\+destroy}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\item 
+bool \mbox{\hyperlink{queue_8c_a09a3da9bf84f747356ef8050447bf35a}{queue\+\_\+is\+\_\+empty}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\item 
+int64\+\_\+t \mbox{\hyperlink{queue_8c_a4de3514a4e7df6f4d9b2a2101dec89ee}{queue\+\_\+enqueue}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue, const int64\+\_\+t data)
+\item 
+int64\+\_\+t \mbox{\hyperlink{queue_8c_a804fb24bd67781a6f5dd1d902dd353ad}{queue\+\_\+dequeue}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue, int64\+\_\+t $\ast$data)
+\item 
+void \mbox{\hyperlink{queue_8c_af27bc733f07b2ff01a59ce198ede1e1a}{queue\+\_\+clear}} (\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$queue)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{queue_8c_af27bc733f07b2ff01a59ce198ede1e1a}\label{queue_8c_af27bc733f07b2ff01a59ce198ede1e1a}} 
+\index{queue.c@{queue.c}!queue\_clear@{queue\_clear}}
+\index{queue\_clear@{queue\_clear}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_clear()}{queue\_clear()}}
+{\footnotesize\ttfamily void queue\+\_\+clear (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a804fb24bd67781a6f5dd1d902dd353ad}\label{queue_8c_a804fb24bd67781a6f5dd1d902dd353ad}} 
+\index{queue.c@{queue.c}!queue\_dequeue@{queue\_dequeue}}
+\index{queue\_dequeue@{queue\_dequeue}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_dequeue()}{queue\_dequeue()}}
+{\footnotesize\ttfamily int64\+\_\+t queue\+\_\+dequeue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue,  }\item[{int64\+\_\+t $\ast$}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a4198ce0ca91b3c5f3d276d3550354196}\label{queue_8c_a4198ce0ca91b3c5f3d276d3550354196}} 
+\index{queue.c@{queue.c}!queue\_destroy@{queue\_destroy}}
+\index{queue\_destroy@{queue\_destroy}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_destroy()}{queue\_destroy()}}
+{\footnotesize\ttfamily int queue\+\_\+destroy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a4de3514a4e7df6f4d9b2a2101dec89ee}\label{queue_8c_a4de3514a4e7df6f4d9b2a2101dec89ee}} 
+\index{queue.c@{queue.c}!queue\_enqueue@{queue\_enqueue}}
+\index{queue\_enqueue@{queue\_enqueue}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_enqueue()}{queue\_enqueue()}}
+{\footnotesize\ttfamily int64\+\_\+t queue\+\_\+enqueue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue,  }\item[{const int64\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a8f5abe559cd352d91efb79bc6e1788de}\label{queue_8c_a8f5abe559cd352d91efb79bc6e1788de}} 
+\index{queue.c@{queue.c}!queue\_init@{queue\_init}}
+\index{queue\_init@{queue\_init}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_init()}{queue\_init()}}
+{\footnotesize\ttfamily int queue\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+
+... @remaks This subroutine is N\+OT thread-\/safe \mbox{\Hypertarget{queue_8c_a09a3da9bf84f747356ef8050447bf35a}\label{queue_8c_a09a3da9bf84f747356ef8050447bf35a}} 
+\index{queue.c@{queue.c}!queue\_is\_empty@{queue\_is\_empty}}
+\index{queue\_is\_empty@{queue\_is\_empty}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_is\_empty()}{queue\_is\_empty()}}
+{\footnotesize\ttfamily bool queue\+\_\+is\+\_\+empty (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a22ceeb725e700e559fcedebe014e71f0}\label{queue_8c_a22ceeb725e700e559fcedebe014e71f0}} 
+\index{queue.c@{queue.c}!queue\_is\_empty\_unsafe@{queue\_is\_empty\_unsafe}}
+\index{queue\_is\_empty\_unsafe@{queue\_is\_empty\_unsafe}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_is\_empty\_unsafe()}{queue\_is\_empty\_unsafe()}}
+{\footnotesize\ttfamily bool queue\+\_\+is\+\_\+empty\+\_\+unsafe (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{queue_8c_a0bfcaddf49f3baf335ca468f9adb2292}\label{queue_8c_a0bfcaddf49f3baf335ca468f9adb2292}} 
+\index{queue.c@{queue.c}!queue\_remove\_first\_unsafe@{queue\_remove\_first\_unsafe}}
+\index{queue\_remove\_first\_unsafe@{queue\_remove\_first\_unsafe}!queue.c@{queue.c}}
+\doxysubsubsection{\texorpdfstring{queue\_remove\_first\_unsafe()}{queue\_remove\_first\_unsafe()}}
+{\footnotesize\ttfamily void queue\+\_\+remove\+\_\+first\+\_\+unsafe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$}]{queue }\end{DoxyParamCaption})}
+

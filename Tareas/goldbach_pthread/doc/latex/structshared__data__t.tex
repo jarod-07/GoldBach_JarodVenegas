@@ -1,0 +1,101 @@
+\hypertarget{structshared__data__t}{}\doxysection{shared\+\_\+data\+\_\+t Struct Reference}
+\label{structshared__data__t}\index{shared\_data\_t@{shared\_data\_t}}
+
+
+Estructura utilizada para almacenar los datos compartidos entre la n cantidad de hilos.  
+
+
+
+
+{\ttfamily \#include $<$goldbach\+\_\+pthread.\+h$>$}
+
+
+
+Collaboration diagram for shared\+\_\+data\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=272pt]{structshared__data__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+F\+I\+LE $\ast$ \mbox{\hyperlink{structshared__data__t_acd21fedde40a0fdbf186c4a11dd97635}{input}}
+\item 
+F\+I\+LE $\ast$ \mbox{\hyperlink{structshared__data__t_a26e1355761361c406684523731cc6ccc}{output}}
+\item 
+\mbox{\hyperlink{structSums}{Sums}} $\ast$$\ast$ \mbox{\hyperlink{structshared__data__t_a7099f93487690899af9352d808413758}{sums\+\_\+vector}}
+\item 
+int64\+\_\+t \mbox{\hyperlink{structshared__data__t_a8359045ada4692585136460af6ae46d9}{number\+\_\+counter}}
+\item 
+\mbox{\hyperlink{structqueue__t}{queue\+\_\+t}} $\ast$ \mbox{\hyperlink{structshared__data__t_a591d7d4e04c3463afc98e9fe449ecc48}{numbers\+\_\+queue}}
+\item 
+sem\+\_\+t \mbox{\hyperlink{structshared__data__t_a9f8039220ce007595f619b470b4d2b27}{sem\+\_\+get\+\_\+position}}
+\item 
+int64\+\_\+t \mbox{\hyperlink{structshared__data__t_a7aa9bd72cad49cefe82262b166357b0d}{thread\+\_\+position}}
+\item 
+int64\+\_\+t \mbox{\hyperlink{structshared__data__t_ae9be3c8d71cc9757fd196887b7a1e997}{number\+\_\+of\+\_\+threads}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Estructura utilizada para almacenar los datos compartidos entre la n cantidad de hilos. 
+
+
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structshared__data__t_acd21fedde40a0fdbf186c4a11dd97635}\label{structshared__data__t_acd21fedde40a0fdbf186c4a11dd97635}} 
+\index{shared\_data\_t@{shared\_data\_t}!input@{input}}
+\index{input@{input}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{input}{input}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ shared\+\_\+data\+\_\+t\+::input}
+
+\mbox{\Hypertarget{structshared__data__t_a8359045ada4692585136460af6ae46d9}\label{structshared__data__t_a8359045ada4692585136460af6ae46d9}} 
+\index{shared\_data\_t@{shared\_data\_t}!number\_counter@{number\_counter}}
+\index{number\_counter@{number\_counter}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{number\_counter}{number\_counter}}
+{\footnotesize\ttfamily int64\+\_\+t shared\+\_\+data\+\_\+t\+::number\+\_\+counter}
+
+\mbox{\Hypertarget{structshared__data__t_ae9be3c8d71cc9757fd196887b7a1e997}\label{structshared__data__t_ae9be3c8d71cc9757fd196887b7a1e997}} 
+\index{shared\_data\_t@{shared\_data\_t}!number\_of\_threads@{number\_of\_threads}}
+\index{number\_of\_threads@{number\_of\_threads}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{number\_of\_threads}{number\_of\_threads}}
+{\footnotesize\ttfamily int64\+\_\+t shared\+\_\+data\+\_\+t\+::number\+\_\+of\+\_\+threads}
+
+\mbox{\Hypertarget{structshared__data__t_a591d7d4e04c3463afc98e9fe449ecc48}\label{structshared__data__t_a591d7d4e04c3463afc98e9fe449ecc48}} 
+\index{shared\_data\_t@{shared\_data\_t}!numbers\_queue@{numbers\_queue}}
+\index{numbers\_queue@{numbers\_queue}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{numbers\_queue}{numbers\_queue}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structqueue__t}{queue\+\_\+t}}$\ast$ shared\+\_\+data\+\_\+t\+::numbers\+\_\+queue}
+
+\mbox{\Hypertarget{structshared__data__t_a26e1355761361c406684523731cc6ccc}\label{structshared__data__t_a26e1355761361c406684523731cc6ccc}} 
+\index{shared\_data\_t@{shared\_data\_t}!output@{output}}
+\index{output@{output}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{output}{output}}
+{\footnotesize\ttfamily F\+I\+LE$\ast$ shared\+\_\+data\+\_\+t\+::output}
+
+\mbox{\Hypertarget{structshared__data__t_a9f8039220ce007595f619b470b4d2b27}\label{structshared__data__t_a9f8039220ce007595f619b470b4d2b27}} 
+\index{shared\_data\_t@{shared\_data\_t}!sem\_get\_position@{sem\_get\_position}}
+\index{sem\_get\_position@{sem\_get\_position}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{sem\_get\_position}{sem\_get\_position}}
+{\footnotesize\ttfamily sem\+\_\+t shared\+\_\+data\+\_\+t\+::sem\+\_\+get\+\_\+position}
+
+\mbox{\Hypertarget{structshared__data__t_a7099f93487690899af9352d808413758}\label{structshared__data__t_a7099f93487690899af9352d808413758}} 
+\index{shared\_data\_t@{shared\_data\_t}!sums\_vector@{sums\_vector}}
+\index{sums\_vector@{sums\_vector}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{sums\_vector}{sums\_vector}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structSums}{Sums}}$\ast$$\ast$ shared\+\_\+data\+\_\+t\+::sums\+\_\+vector}
+
+\mbox{\Hypertarget{structshared__data__t_a7aa9bd72cad49cefe82262b166357b0d}\label{structshared__data__t_a7aa9bd72cad49cefe82262b166357b0d}} 
+\index{shared\_data\_t@{shared\_data\_t}!thread\_position@{thread\_position}}
+\index{thread\_position@{thread\_position}!shared\_data\_t@{shared\_data\_t}}
+\doxysubsubsection{\texorpdfstring{thread\_position}{thread\_position}}
+{\footnotesize\ttfamily int64\+\_\+t shared\+\_\+data\+\_\+t\+::thread\+\_\+position}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{goldbach__pthread_8h}{goldbach\+\_\+pthread.\+h}}\end{DoxyCompactItemize}
