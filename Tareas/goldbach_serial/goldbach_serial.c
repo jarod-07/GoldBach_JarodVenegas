@@ -56,11 +56,11 @@ int par_impar(int64_t num) {
 }
 
 /**
- * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
+ * @brief Para todo numero par utiliza la conjetura fuerte de goldbach
  * @param num_temp entero de 64 bits
  * @param contador entero de 64 bits
  * @param output file
- * @return struct Sumas
+ * @return Una struct de Sumas
  */
 Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
     int64_t numero = 0;
@@ -75,20 +75,21 @@ Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
     Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
     int64_t pivote = 2;
     for (int64_t i = numero - pivote; i > 2; i--) {
-        if ((es_primo(pivote) == 1) && (es_primo(i) == 1)) {
-            if (numero < 0) {
+        if ((es_primo(pivote) == 1) && (es_primo(i) == 1) && pivote <= i) {
+            if (num_temp < 0) {
                 sumas[*contador].first = (int64_t)pivote;
                 sumas[*contador].second = (int64_t)i;
             }
+
             *contador = *contador + 1;
             if (*contador == tamano && numero < 0) {
-                tamano = tamano * 2;
                 Sumas* sumas_temp =
                     realloc(sumas, (tamano * 2) * sizeof(Sumas));
                 if (sumas_temp == NULL) {
                     fprintf(output, "Memory not reallocated\n");
                     exit(0);
                 } else {
+                    tamano = tamano * 2;
                     sumas = sumas_temp;
                 }
             }
@@ -104,7 +105,7 @@ Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
  * @param num_temp entero de 64 bits
  * @param contador entero de 64 bits
  * @param output file
- * @return struct Sumas
+ * @return Una struct de Sumas
  */
 Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
     int64_t numero = 0;
@@ -133,17 +134,17 @@ Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
                             }
                             *contador = *contador + 1;
                             if (*contador == tamano && num_temp < 0) {
-                                tamano = tamano * 2;
                                 Sumas* sumas_temp = realloc(
                                     sumas, (tamano * 2) * sizeof(Sumas));
                                 if (sumas_temp == NULL) {
                                     fprintf(output, "Memory not reallocated\n");
                                     exit(0);
                                 } else {
+                                    tamano = tamano * 2;
                                     sumas = sumas_temp;
                                 }
                             }
-                       }
+                        }
                     }
                 }
             }
@@ -157,7 +158,7 @@ Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
  * @brief Imprime las sumas de la conjetura debil
  * @param num_temp entero de 64 bits
  * @param contador entero de 64 bits
- * @param struct Sumas
+ * @param  Sumas struct Sumas
  * @param output file
  * @return void
  */
@@ -169,6 +170,8 @@ void imprimir_debil(int64_t num_temp, int64_t contador, Sumas* sumas,
     int64_t numero = 0;
     if (num_temp < 0) {
         numero = num_temp * -1;
+    } else {
+        numero = num_temp;
     }
     if (num_temp < 0) {
         fprintf(output,
@@ -176,7 +179,7 @@ void imprimir_debil(int64_t num_temp, int64_t contador, Sumas* sumas,
                 ": "
                 "%" PRIu64 " sums: ",
                 numero, contador);
-        for (int i = 0; i < contador; i++) {
+        for (int64_t i = 0; i < contador; i++) {
             if (i != contador - 1) {
                 primera = sumas[i].first;
                 segunda = sumas[i].second;
@@ -211,10 +214,10 @@ void imprimir_debil(int64_t num_temp, int64_t contador, Sumas* sumas,
 }
 
 /**
- * @brief Imprime las sumas de la conjetura debil
+ * @brief Imprime las sumas de la conjetura fuerte
  * @param num_temp entero de 64 bits
  * @param contador entero de 64 bits
- * @param struct Sumas
+ * @param Sumas Struct de Sumas
  * @param output file
  * @return void
  */
@@ -225,6 +228,8 @@ void imprimir_fuerte(int64_t num_temp, int64_t contador, Sumas* sumas,
     int64_t numero = 0;
     if (num_temp < 0) {
         numero = num_temp * -1;
+    } else {
+        numero = num_temp;
     }
     if (num_temp < 0) {
         fprintf(output,
@@ -232,7 +237,7 @@ void imprimir_fuerte(int64_t num_temp, int64_t contador, Sumas* sumas,
                 ": "
                 "%" PRIu64 " sums: ",
                 numero, contador);
-        for (int i = 0; i < contador; i++) {
+        for (int64_t i = 0; i < contador; i++) {
             if (i != contador - 1) {
                 primera = sumas[i].first;
                 segunda = sumas[i].second;
@@ -263,7 +268,8 @@ void imprimir_fuerte(int64_t num_temp, int64_t contador, Sumas* sumas,
 /**
  * @brief Metodo que controla la entrada de datos para utilizar la conjetura de
  * GoldBach
- * @param numero entero
+ * @param numero entero de 64 bits
+ * @param output File
  * @return void
  */
 void goldbach(int64_t num, FILE* output) {
@@ -290,8 +296,9 @@ void goldbach(int64_t num, FILE* output) {
 }
 
 /**
- * @brief Muestra la interfaz del programa
- * @param -
+ * @brief Ingresa los valores digitados por el usuario dentro de un array
+ * @param input file
+ * @param output file
  * @return void
  */
 void iniciar(FILE* input, FILE* output) {
@@ -321,7 +328,7 @@ void iniciar(FILE* input, FILE* output) {
 }
 
 /**
- * @return El menu del progama de la Conjetura De GoldBach
+ * @return La interfaz del progama de la Conjetura De GoldBach
  */
 int main(void) {
     FILE* input = stdin;
