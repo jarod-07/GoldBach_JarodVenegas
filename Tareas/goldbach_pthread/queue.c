@@ -9,6 +9,11 @@
 void queue_remove_first_unsafe(queue_t* queue);
 bool queue_is_empty_unsafe(const queue_t* queue);
 
+/**
+ * @brief Inicializa la cola
+ * @param queue struct queue_t
+ * @return int inicializa el semaforo
+ */
 int queue_init(queue_t* queue) {
     assert(queue);
     queue->head = NULL;
@@ -16,16 +21,32 @@ int queue_init(queue_t* queue) {
     return pthread_mutex_init(&queue->can_access_queue, NULL);
 }
 
+/**
+ * @brief Destruye la cola
+ * @param queue struct queue_t
+ * @return int destruye el semaforo
+ */
 int queue_destroy(queue_t* queue) {
     queue_clear(queue);
     return pthread_mutex_destroy(&queue->can_access_queue);
 }
 
+/**
+ * @brief Determina si la cola esta vacia o no
+ * @param queue struct queue_t
+ * @return bool dependiendo si esta vacio o no
+ */
 bool queue_is_empty_unsafe(const queue_t* queue) {
     assert(queue);
     return queue->head == NULL;
 }
 
+/**
+ * @brief Determina si la cola esta vacia o no (controla los hilos con un
+ * semaforo)
+ * @param queue struct queue_t
+ * @return bool dependiendo si esta vacio o no
+ */
 bool queue_is_empty(queue_t* queue) {
     assert(queue);
     pthread_mutex_lock(&queue->can_access_queue);
@@ -34,6 +55,13 @@ bool queue_is_empty(queue_t* queue) {
     return result;
 }
 
+/**
+ * @brief Coloca un numero en el tope de la cola (controla los hilos con un
+ * semaforo)
+ * @param queue struct queue_t
+ * @param data int de 64 bits
+ * @return int de 64 bits
+ */
 int64_t queue_enqueue(queue_t* queue, const int64_t data) {
     assert(queue);
     int error = EXIT_SUCCESS;
@@ -57,6 +85,12 @@ int64_t queue_enqueue(queue_t* queue, const int64_t data) {
     return error;
 }
 
+/**
+ * @brief Saca el valor del tope de la cola (controla los hilos con un semaforo)
+ * @param queue struct queue_t
+ * @param data int de 64 bits
+ * @return int de 64 bits
+ */
 int64_t queue_dequeue(queue_t* queue, int64_t* data) {
     assert(queue);
     int error = 0;
@@ -75,6 +109,11 @@ int64_t queue_dequeue(queue_t* queue, int64_t* data) {
     return error;
 }
 
+/**
+ * @brief Quita el numero del tope de la cola(no tiene semaforo)
+ * @param queue struct queue_t
+ * @return void
+ */
 void queue_remove_first_unsafe(queue_t* queue) {
     assert(queue);
     assert(!queue_is_empty_unsafe(queue));
@@ -86,6 +125,11 @@ void queue_remove_first_unsafe(queue_t* queue) {
     }
 }
 
+/**
+ * @brief Limpia la cola
+ * @param queue struct queue_t
+ * @return void
+ */
 void queue_clear(queue_t* queue) {
     assert(queue);
     pthread_mutex_lock(&queue->can_access_queue);

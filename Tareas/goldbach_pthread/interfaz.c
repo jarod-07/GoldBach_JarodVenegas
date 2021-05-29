@@ -1,5 +1,5 @@
 /**
- * @file goldbach_pthread.c
+ * @file interfaz.c
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Interfaz del programa de la conjetura de Goldbach_Pthreads que se
  * encarga de los metodos de impresion y entrada de datos
@@ -69,8 +69,8 @@ int input_number(shared_data_t* shared_data) {
 /**
  * @brief Imprime las sumas de la conjetura debil
  * @param num_temp entero de 64 bits
- * @param contador entero de 64 bits
- * @param struct Sumas
+ * @param counter entero de 64 bits
+ * @param sums Struct Sumas
  * @param output file
  * @return void
  */
@@ -125,8 +125,8 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
 /**
  * @brief Imprime las sumas de la conjetura debil
  * @param num_temp entero de 64 bits
- * @param contador entero de 64 bits
- * @param struct Sumas
+ * @param counter entero de 64 bits
+ * @param sums struct Sumas
  * @param output file
  * @return void
  */

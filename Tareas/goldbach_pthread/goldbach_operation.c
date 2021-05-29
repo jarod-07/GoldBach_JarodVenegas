@@ -1,18 +1,8 @@
-/**
- * @file goldbach_pthread.c
- * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Controla las operaciones para calcular la conjetura de Goldbach
- * @version 1.0
- * @date 2021-05-30
- *
- * @copyright Copyright (c) 2021
- *
- */
 #include "goldbach_operation.h"
 
 /**
  * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
+ * @param number entero de 64 bits
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int is_prime(int64_t number) {
@@ -26,7 +16,7 @@ int is_prime(int64_t number) {
 
 /**
  * @brief Determina si un numero es par o impar
- * @param numero entero de 64 bits
+ * @param number entero de 64 bits
  * @return devuelve un 1 si es par y un 0 si es impar
  */
 int even_odd(int64_t number) {
@@ -42,7 +32,7 @@ int even_odd(int64_t number) {
 /**
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
  * @param num_temp entero de 64 bits
- * @param contador entero de 64 bits
+ * @param counter entero de 64 bits
  * @param output file
  * @return struct Sumas
  */
@@ -59,7 +49,7 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
     Sums* sums = (Sums*)calloc(size, sizeof(Sums));
     int64_t pivot = 2;
     for (int64_t i = number - pivot; i > 2; i--) {
-        if ((is_prime(pivot) == 1) && (is_prime(i) == 1)) {
+        if ((is_prime(pivot) == 1) && (is_prime(i) == 1) && pivot <= i) {
             if (num_temp < 0) {
                 sums[*counter].first = (int64_t)pivot;
                 sums[*counter].second = (int64_t)i;
@@ -84,7 +74,7 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
 /**
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
  * @param num_temp entero de 64 bits
- * @param contador entero de 64 bits
+ * @param counter entero de 64 bits
  * @param output file
  * @return struct Sumas
  */

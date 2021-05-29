@@ -17,8 +17,7 @@
 #include "queue.h"
 
 /**
- * @brief Estructura utilizada para almacenar los datos compartidos entre la n
- * cantidad de hilos
+ * @brief Estructura utilizada para tener informacion compartida por los hilos
  *
  */
 typedef struct {
@@ -33,7 +32,7 @@ typedef struct {
 } shared_data_t;
 
 /**
- * @brief Estructura utilizada para alamcenar los datos privados de los hilos
+ * @brief Estructura utilizada para tener informacion privada de cada hilo
  *
  */
 typedef struct {

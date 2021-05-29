@@ -1,20 +1,12 @@
-/**
- * @file goldbach_pthread.c
- * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Controla los hilos del programa de la conjetura Goldbach_Pthreads
- * @version 1.0
- * @date 2021-05-30
- *
- * @copyright Copyright (c) 2021
- *
- */
 #include "goldbach_pthread.h"
 
 // inicio de metodos privados
 /**
- * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
- * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @brief metodo necesario para asignar los valores adecuados dentro de la
+ * estructura Sums en caso de que el numero sea mas grande o más pequeño del
+ * limite
+ * @param private_data struct que contiene los datos privados del hilo
+ * @return void
  */
 void major_limit_def(private_data_t* private_data) {
     Sums* invalid_cases = (Sums*)calloc(1, sizeof(Sums));
@@ -27,9 +19,10 @@ void major_limit_def(private_data_t* private_data) {
 }
 
 /**
- * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
- * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @brief metodo necesario para asignar los valores adecuados dentro de la
+ * estructura Sums en caso de que el numero sea un valor entre [-5 , 5]
+ * @param private_data struct que contiene los datos privados del hilo
+ * @return void
  */
 void minor_limit_def(private_data_t* private_data) {
     Sums* invalid_cases = (Sums*)calloc(1, sizeof(Sums));
@@ -42,9 +35,12 @@ void minor_limit_def(private_data_t* private_data) {
 }
 
 /**
- * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
- * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @brief metodo necesario para asignar los valores adecuados dentro de la
+ * estructura Sums en caso de que el numero sea par (sin importar si es negativo
+ * o positivo)
+ * @param private_data struct que contiene los datos privados del hilo
+ * @param number int de 64 bits
+ * @return void
  */
 void strong_conjecture_def(private_data_t* private_data, int64_t number) {
     int64_t sums_counter = 0;
@@ -62,9 +58,12 @@ void strong_conjecture_def(private_data_t* private_data, int64_t number) {
 }
 
 /**
- * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
- * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @brief metodo necesario para asignar los valores adecuados dentro de la
+ * estructura Sums en caso de que el numero sea impar (sin importar si es
+ * negativo o positivo)
+ * @param private_data struct que contiene los datos privados del hilo
+ * @param number int de 64 bits
+ * @return void
  */
 void weak_conjecture_def(private_data_t* private_data, int64_t number) {
     int64_t sums_counter = 0;
@@ -82,9 +81,9 @@ void weak_conjecture_def(private_data_t* private_data, int64_t number) {
 // fin de metodos privados
 
 /**
- * @brief Determina si un numero es primo
- * @param numero entero de 64 bits
- * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @brief Controla la entrada de datos y aplica la conjetura de goldbach
+ * @param private_data struct que contiene los datos privados del hilo
+ * @return void
  */
 void goldbach(private_data_t* private_data) {
     int64_t number = private_data->goldbach_number;
@@ -106,9 +105,8 @@ void goldbach(private_data_t* private_data) {
 }
 
 /**
- * @brief Controla los hilos con un semaforo y envia a cada hilo a ejecutar
- * goldbach
- * @param data void que recibe un private_data
+ * @brief Funcion para controlar los hilos
+ * @param data void que recibe un private data
  * @return void
  */
 void* run_threads(void* data) {
@@ -118,9 +116,8 @@ void* run_threads(void* data) {
         sem_wait(&shared_data->sem_get_position);
         queue_dequeue(
             shared_data->numbers_queue,
-            &private_data->goldbach_number);  // LA COLA ES THREAD SAFE, POR
-                                              // LO TANTO NO TENEMOS UN MUTEX
-                                              // DE CAN ACCESS QUEUE
+            &private_data->goldbach_number);  // LA COLA ES THREAD SAFE
+                                              
         private_data->position = shared_data->thread_position;
         shared_data->thread_position++;
         sem_post(&shared_data->sem_get_position);
@@ -131,7 +128,8 @@ void* run_threads(void* data) {
 
 /**
  * @brief Crea los hilos y envia cada hilo a ejecutar el codigo correspondiente
- * @param shared_data struct shared_data
+ * @param shared_data struct shared_data de todos los hilos
+ * @return int error
  */
 int create_threads(shared_data_t* shared_data) {
     assert(shared_data);

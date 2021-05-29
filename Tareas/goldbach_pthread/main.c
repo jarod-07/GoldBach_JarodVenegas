@@ -1,19 +1,9 @@
-/**
- * @file goldbach_pthread.c
- * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Main que controla el programa sobre la conjetura de Goldbach_Pthreads
- * @version 1.0
- * @date 2021-05-30
- *
- * @copyright Copyright (c) 2021
- *
- */
-#include "goldbach_pthread.h"
-#include "interfaz.h"
+#include "main.h"
 /**
  * @brief Controla el programa(crea los hilos e inicializa el shared_data,
- * imprime y libera la memoria)
- * @param argc recibe un parametro para definir la cantidad de numeros
+ * imprime las sumas y libera la memoria)
+ * @param argc cantidad de argumentos ingresados
+ * @param argv recibe un parametro para definir la cantidad de numeros
  */
 int main(int argc, char* argv[]) {
     shared_data_t* shared_data =
