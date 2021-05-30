@@ -1,3 +1,14 @@
+/**
+ * @file main.c
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Controla el programa(crea los hilos e inicializa el shared_data,
+ * imprime las sumas y libera la memoria)
+ * @version 1.0
+ * @date 2021-05-30
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #include "main.h"
 /**
  * @brief Controla el programa(crea los hilos e inicializa el shared_data,
@@ -29,7 +40,7 @@ int main(int argc, char* argv[]) {
             free(shared_data->sums_vector[i]);
         }
         free(shared_data->sums_vector);
-        free(shared_data->numbers_queue);
+        free(shared_data->numbers_vec);
         free(shared_data);
     }
     return 0;

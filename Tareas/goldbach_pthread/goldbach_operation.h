@@ -1,5 +1,5 @@
 /**
- * @file goldbach_operation.c
+ * @file goldbach_pthread.h
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Controla las operaciones para calcular la conjetura de Goldbach
  * @version 1.0

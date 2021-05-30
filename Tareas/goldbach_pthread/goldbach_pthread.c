@@ -1,3 +1,13 @@
+/**
+ * @file goldbach_pthread.c
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Controla los hilos del programa de la conjetura Goldbach_Pthreads
+ * @version 1.0
+ * @date 2021-05-30
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #include "goldbach_pthread.h"
 
 // inicio de metodos privados
@@ -22,12 +32,15 @@ void major_limit_def(private_data_t* private_data) {
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea un valor entre [-5 , 5]
  * @param private_data struct que contiene los datos privados del hilo
+ * @param number int de 64 bits
  * @return void
  */
-void minor_limit_def(private_data_t* private_data) {
+void minor_limit_def(private_data_t* private_data, int64_t number) {
     Sums* invalid_cases = (Sums*)calloc(1, sizeof(Sums));
     private_data->shared_data->sums_vector[private_data->position] =
         invalid_cases;
+    private_data->shared_data->sums_vector[private_data->position]->number =
+        number;
     private_data->shared_data->sums_vector[private_data->position]
         ->major_limit = 1;
     private_data->shared_data->sums_vector[private_data->position]
@@ -83,17 +96,16 @@ void weak_conjecture_def(private_data_t* private_data, int64_t number) {
 /**
  * @brief Controla la entrada de datos y aplica la conjetura de goldbach
  * @param private_data struct que contiene los datos privados del hilo
+ * @param number int de 64 bits
  * @return void
  */
-void goldbach(private_data_t* private_data) {
-    int64_t number = private_data->goldbach_number;
-
+void goldbach(private_data_t* private_data, int64_t number) {
     if (number > ((int64_t)pow(2, 63) - 1) ||
         number < -((int64_t)pow(2, 63) - 1)) {
         major_limit_def(private_data);
     } else {
         if ((number <= 5 && number >= -5)) {
-            minor_limit_def(private_data);
+            minor_limit_def(private_data, number);
         } else {
             if (even_odd(number) == 1) {
                 strong_conjecture_def(private_data, number);
@@ -105,26 +117,94 @@ void goldbach(private_data_t* private_data) {
 }
 
 /**
- * @brief Funcion para controlar los hilos
- * @param data void que recibe un private data
+ * @brief Funcion para controlar los hilos: reparte el trabajo equitativemente
+ * entre los hilos
+ * @param data void que recibe un private_data
  * @return void
  */
 void* run_threads(void* data) {
     private_data_t* private_data = (private_data_t*)data;
     shared_data_t* shared_data = private_data->shared_data;
-    while (!(queue_is_empty(shared_data->numbers_queue))) {
-        sem_wait(&shared_data->sem_get_position);
-        queue_dequeue(
-            shared_data->numbers_queue,
-            &private_data->goldbach_number);  // LA COLA ES THREAD SAFE
-                                              
-        private_data->position = shared_data->thread_position;
-        shared_data->thread_position++;
-        sem_post(&shared_data->sem_get_position);
-        goldbach(private_data);
+
+    // Caso donde el numero de hilos es menor a la cantidad de numeros
+    if ((shared_data->number_of_threads - 1) < shared_data->number_counter) {
+        // Caso ideal donde la cantidad de numerso es divisible entre la
+        // cantidad de hilos
+        if ((shared_data->number_counter % shared_data->number_of_threads) ==
+            0) {
+            int64_t distribution =
+                shared_data->number_counter / shared_data->number_of_threads;
+
+            int64_t position = private_data->thread_id * distribution;
+            int64_t limit =
+                distribution * (private_data->thread_id + 1);
+            for (int64_t y = position; y < limit; y++) {
+                int64_t number = shared_data->numbers_vec[y];
+                private_data->position = y;
+                goldbach(private_data, number);
+            }
+
+        } else {
+            // Caso donde la cantidad de numeros no es divisible entre la
+            // cantidad de hilos
+
+            // Esta parte distribuye una cantidad de numeros que si sea
+            // divisible
+            int64_t residue =
+                (shared_data->number_counter) % shared_data->number_of_threads;
+            int64_t number_minus_residue =
+                (shared_data->number_counter) - residue;
+            int64_t distribution =
+                number_minus_residue / shared_data->number_of_threads;
+
+            int64_t position = private_data->thread_id * distribution;
+            int64_t limit = distribution * (private_data->thread_id + 1);
+            for (int64_t y = position; y < limit; y++) {
+                int64_t number = shared_data->numbers_vec[y];
+                private_data->position = y;
+                goldbach(private_data, number);
+            }
+            // Esta aparte es para la cantidad de hilos que sobran
+            if (private_data->thread_id < residue) {
+                int64_t number =
+                    shared_data->numbers_vec[private_data->thread_id +
+                                             number_minus_residue];
+                private_data->position =
+                    private_data->thread_id + number_minus_residue;
+                goldbach(private_data, number);
+            }
+        }
+    } else {
+        // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
+        // de numeros y por lo tanto cada hilo agarra un numero
+        if (private_data->thread_id < shared_data->number_counter) {
+            int64_t number = shared_data->numbers_vec[private_data->thread_id];
+            private_data->position = private_data->thread_id;
+            goldbach(private_data, number);
+        }
     }
+
     return 0;
 }
+
+/*
+int64_t distribution =
+    shared_data->number_counter / shared_data->number_of_threads;
+for (int64_t i = 0; i < shared_data->number_of_threads; i++) {
+    if (private_data->thread_id == i) {
+        int64_t position = private_data->thread_id * distribution;
+        int64_t new_distribution =
+            distribution * (private_data->thread_id + 1);
+        for (int64_t y = position; y < new_distribution; y++) {
+            int64_t number = shared_data->numbers_vec[y];
+            private_data->position = y;
+            goldbach(private_data, number);
+            printf("\n%zu hola: %zu",private_data->thread_id,number);
+        }
+
+    }
+}
+*/
 
 /**
  * @brief Crea los hilos y envia cada hilo a ejecutar el codigo correspondiente
@@ -141,6 +221,7 @@ int create_threads(shared_data_t* shared_data) {
     if (threads && private_data) {
         for (int64_t index = 0; index < shared_data->number_of_threads;
              ++index) {
+            private_data[index].thread_id = index;
             private_data[index].shared_data = shared_data;
             sem_init(&shared_data->sem_get_position, /*pshared*/ 0,
                      /*value*/ 1);

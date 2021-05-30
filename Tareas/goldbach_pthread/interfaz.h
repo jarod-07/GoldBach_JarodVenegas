@@ -1,5 +1,5 @@
 /**
- * @file interfaz.c
+ * @file interfaz.h
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Interfaz del programa de la conjetura de Goldbach_Pthreads que se
  * encarga de los metodos de impresion y entrada de datos
