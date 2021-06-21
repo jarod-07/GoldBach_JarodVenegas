@@ -1,13 +1,3 @@
-/**
- * @file goldbach_pthread.c
- * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Controla las operaciones para calcular la conjetura de Goldbach
- * @version 1.0
- * @date 2021-05-30
- *
- * @copyright Copyright (c) 2021
- *
- */
 #include "goldbach_operation.h"
 
 /**
@@ -16,14 +6,18 @@
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int is_prime(int64_t number) {
-    if(number == 2){return 1;}
-    if(number % 2 == 0){return 0;}
-    for (int64_t i = 1; i < number/4; i++) {
-        if (number % ((2*i)+1) == 0) {
-            return 0;  // no es primo
+    if(number == 2 || number == 3 || number == 5 || number == 7){return 1;}
+    if(number%2 == 0 || number%3 == 0 || number%5 == 0 || number%7 == 0 ){
+        return 0;
+    }else{
+        for (int64_t i = 11; i * i <= number; i+=6) {
+            if (number % i == 0 || number % (i+2) == 0) {
+                return 0;  // no es primo
+            }
         }
+        return 1;  // si es primo
     }
-    return 1;  // si es primo  
+    
 }
 
 /**
@@ -45,10 +39,9 @@ int even_odd(int64_t number) {
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
- * @param output file
  * @return struct Sumas
  */
-Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+Sums* strong_conjecture(int64_t num_temp, int64_t* counter) {
     int64_t number = 0;
 
     if (num_temp < 0) {
@@ -71,7 +64,7 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
                 size = size * 2;
                 Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
                 if (sums_temp == NULL) {
-                    fprintf(output, "Memory not reallocated\n");
+                    fprintf(stderr, "Memory not reallocated\n");
                     exit(0);
                 } else {
                     sums = sums_temp;
@@ -87,10 +80,9 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
- * @param output file
  * @return struct Sumas
  */
-Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+Sums* weak_conjecture(int64_t num_temp, int64_t* counter) {
     int64_t number = 0;
 
     if (num_temp < 0) {
@@ -103,9 +95,9 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
 
     Sums* sums = (Sums*)calloc(size, sizeof(Sums));
 
-    for (int64_t x = 2; x < number/2; x++) {
+    for (int64_t x = 2; x < number; x++) {
         if (is_prime(x) == 1) {
-            for (int64_t y = x; y < number/2; y++) {
+            for (int64_t y = x; y < number; y++) {
                 if (is_prime(y) == 1) {
                     int64_t posible_number = number - (x + y);
                     if (x + y + posible_number == number &&
@@ -122,7 +114,7 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
                                 Sums* sums_temp =
                                     realloc(sums, (size * 2) * sizeof(Sums));
                                 if (sums_temp == NULL) {
-                                    fprintf(output, "Memory not reallocated\n");
+                                    fprintf(stderr, "Memory not reallocated\n");
                                     exit(0);
                                 } else {
                                     sums = sums_temp;

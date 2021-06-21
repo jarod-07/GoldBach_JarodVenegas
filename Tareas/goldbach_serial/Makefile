@@ -1,45 +1,68 @@
-#target: prerequisitos
-#	regla para build
+APPNAME=$(shell basename $(shell pwd))
+HEADERS=$(wildcard *.h)
+SOURCES=$(wildcard *.c)
+OBJECTS=$(SOURCES:%.c=build/%.o)
+EXEFILE=bin/$(APPNAME)
 
-APPNAME=goldbach_serial
+CC=cc
+CFLAGS=-Wall -Wextra
+LIBS=-pthread
 
-all: $(APPNAME) $(APPNAME)_asan $(APPNAME)_tsan $(APPNAME)_msan $(APPNAME)_ubsan
+LINTFILTERS=$\
+	-build/c++11,$\
+	-build/header_guard,$\
+	-build/include_subdir,$\
+	-readability/casting,$\
+	-runtime/references
 
-$(APPNAME): $(APPNAME).c
-	cc -g -Wall -Wextra $(APPNAME).c -o $(APPNAME) -pthread
+debug: CFLAGS += -g
+release: CFLAGS += -O3 -DNDEBUG
 
-$(APPNAME)_tsan: $(APPNAME).c
-	clang -g -Wall -Wextra -fsanitize=thread $(APPNAME).c -o $(APPNAME)_tsan -pthread
+asan: CFLAGS += -fsanitize=address -fno-omit-frame-pointer
+msan: CFLAGS += -fsanitize=memory
+msan: CC = clang
+tsan: CFLAGS += -fsanitize=thread
+ubsan: CFLAGS += -fsanitize=undefined
 
-$(APPNAME)_asan: $(APPNAME).c
-	clang -g -Wall -Wextra -fsanitize=address $(APPNAME).c -o $(APPNAME)_asan -pthread
+.SECONDEXPANSION:
 
-$(APPNAME)_msan: $(APPNAME).c
-	clang -g -Wall -Wextra -fsanitize=memory $(APPNAME).c -o $(APPNAME)_msan -pthread
+default: $(EXEFILE)
+debug: $(EXEFILE)
+release: $(EXEFILE)
+asan: $(EXEFILE)
+msan: $(EXEFILE)
+tsan: $(EXEFILE)
+ubsan: $(EXEFILE)
 
-$(APPNAME)_ubsan: $(APPNAME).c
-	clang -g -Wall -Wextra -fsanitize=undefined $(APPNAME).c -o $(APPNAME)_ubsan -pthread
-	
+$(EXEFILE): $(OBJECTS) | $$(@D)/.
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+
+build/%.o: %.c | $$(@D)/.
+	$(CC) -c $(CFLAGS) $< -o $@ $(LIBS)
+
+.PRECIOUS: %/.
+%/.:
+	mkdir -p $(dir $@)
+
 .PHONY: memcheck
-memcheck: 
-	valgrind ./$(APPNAME)
+memcheck:
+	valgrind $(EXEFILE)
 
 .PHONY: helgrind
-helgrind: 
-	valgrind --tool=helgrind --quiet ./$(APPNAME)
+helgrind:
+	valgrind --tool=helgrind --quiet $(EXEFILE)
 
 .PHONY: rebuild
-rebuild: clean $(APPNAME)
-	
+rebuild: clean $(EXEFILE)
+
 .PHONY: lint
 lint:
-	cpplint --filter=-readability/casting $(APPNAME).c
-	 
-.PHONY: gitignore
-gitignore: 
-	echo $(APPNAME) $(APPNAME)_asan $(APPNAME)_msan $(APPNAME)_tsan  $(APPNAME)_ubsan | tr " " "\n"> .gitignore
+	cpplint --filter=$(LINTFILTERS) $(HEADERS) $(SOURCES)
 
-.PHONY: clean 
-clean: 
-	rm -rf $(APPNAME) $(APPNAME)_asan $(APPNAME)_msan $(APPNAME)_tsan $(APPNAME)_ubsan
-	
+.PHONY: gitignore
+gitignore:
+	echo "bin/ build/" | tr " " "\n" > .gitignore
+
+.PHONY: clean
+clean:
+	rm -rf bin/ build/

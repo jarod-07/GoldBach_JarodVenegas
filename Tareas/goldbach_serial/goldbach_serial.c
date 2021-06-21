@@ -32,12 +32,14 @@ typedef struct {
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int es_primo(int64_t num) {
-    for (int64_t i = 2; i < num; i++) {
-        if (num % i == 0) {
+    if(num == 2){return 1;}
+    if(num % 2 == 0){return 0;}
+    for (int64_t i = 1; i < num/4; i++) {
+        if (num % ((2*i)+1) == 0) {
             return 0;  // no es primo
         }
     }
-    return 1;  // si es primo
+    return 1;  // si es primo  
 }
 
 /**
@@ -83,13 +85,13 @@ Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
 
             *contador = *contador + 1;
             if (*contador == tamano && numero < 0) {
+                tamano = tamano * 2;
                 Sumas* sumas_temp =
                     realloc(sumas, (tamano * 2) * sizeof(Sumas));
                 if (sumas_temp == NULL) {
                     fprintf(output, "Memory not reallocated\n");
                     exit(0);
                 } else {
-                    tamano = tamano * 2;
                     sumas = sumas_temp;
                 }
             }

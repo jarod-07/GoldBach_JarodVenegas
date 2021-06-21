@@ -11,8 +11,10 @@
 #ifndef GOLDBACH_PTHREAD
 #define GOLDBACH_PTHREAD
 
+#include <pthread.h>
 #include <assert.h>
 
+#include "queue.h"
 #include "goldbach_operation.h"
 
 
@@ -26,7 +28,8 @@ typedef struct {
     FILE* output;
     Sums** sums_vector;
     int64_t number_counter;
-     int64_t* numbers_vec;
+    queue_t numbers_queue; //thread save
+    pthread_mutex_t sem_get_position;
     int64_t thread_position;
     int64_t number_of_threads;
 } shared_data_t;
