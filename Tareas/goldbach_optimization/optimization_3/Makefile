@@ -4,7 +4,7 @@ SOURCES=$(wildcard *.c)
 OBJECTS=$(SOURCES:%.c=build/%.o)
 EXEFILE=bin/$(APPNAME)
 
-CC=cc
+CC=cc -std=c99
 CFLAGS=-Wall -Wextra
 LIBS=-pthread
 
