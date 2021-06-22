@@ -1,3 +1,13 @@
+/**
+ * @file goldbach_pthread.c
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Controla las operaciones para calcular la conjetura de Goldbach
+ * @version 1.0
+ * @date 2021-05-30
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #include "goldbach_operation.h"
 
 /**
@@ -17,7 +27,6 @@ int is_prime(int64_t number) {
         }
         return 1;  // si es primo
     }
-    
 }
 
 /**
@@ -39,9 +48,10 @@ int even_odd(int64_t number) {
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
+ * @param output file
  * @return struct Sumas
  */
-Sums* strong_conjecture(int64_t num_temp, int64_t* counter) {
+Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
     int64_t number = 0;
 
     if (num_temp < 0) {
@@ -64,7 +74,7 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter) {
                 size = size * 2;
                 Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
                 if (sums_temp == NULL) {
-                    fprintf(stderr, "Memory not reallocated\n");
+                    fprintf(output, "Memory not reallocated\n");
                     exit(0);
                 } else {
                     sums = sums_temp;
@@ -80,9 +90,10 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter) {
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
+ * @param output file
  * @return struct Sumas
  */
-Sums* weak_conjecture(int64_t num_temp, int64_t* counter) {
+Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
     int64_t number = 0;
 
     if (num_temp < 0) {
@@ -114,7 +125,7 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter) {
                                 Sums* sums_temp =
                                     realloc(sums, (size * 2) * sizeof(Sums));
                                 if (sums_temp == NULL) {
-                                    fprintf(stderr, "Memory not reallocated\n");
+                                    fprintf(output, "Memory not reallocated\n");
                                     exit(0);
                                 } else {
                                     sums = sums_temp;

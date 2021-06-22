@@ -103,9 +103,9 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
 
     Sums* sums = (Sums*)calloc(size, sizeof(Sums));
 
-    for (int64_t x = 2; x < number/2; x++) {
+    for (int64_t x = 2; x < number; x++) {
         if (is_prime(x) == 1) {
-            for (int64_t y = x; y < number/2; y++) {
+            for (int64_t y = x; y < number; y++) {
                 if (is_prime(y) == 1) {
                     int64_t posible_number = number - (x + y);
                     if (x + y + posible_number == number &&
