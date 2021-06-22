@@ -4,7 +4,7 @@ SOURCES=$(wildcard *.c)
 OBJECTS=$(SOURCES:%.c=build/%.o)
 EXEFILE=bin/$(APPNAME)
 
-CC=cc
+CC=cc -std=c99
 CFLAGS=-Wall -Wextra
 LIBS=-pthread
 
@@ -51,6 +51,10 @@ memcheck:
 .PHONY: helgrind
 helgrind:
 	valgrind --tool=helgrind --quiet $(EXEFILE)
+	
+.PHONY: callgrind
+callgrind:
+	valgrind --tool=callgrind --quiet $(EXEFILE)
 
 .PHONY: rebuild
 rebuild: clean $(EXEFILE)
