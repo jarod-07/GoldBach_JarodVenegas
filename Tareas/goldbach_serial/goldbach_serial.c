@@ -32,14 +32,17 @@ typedef struct {
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int es_primo(int64_t num) {
-    if(num == 2){return 1;}
-    if(num % 2 == 0){return 0;}
-    for (int64_t i = 1; i < num/4; i++) {
-        if (num % ((2*i)+1) == 0) {
-            return 0;  // no es primo
+    if(num == 2 || num == 3 || num == 5 || num == 7){return 1;}
+    if(num%2 == 0 || num%3 == 0 || num%5 == 0 || num%7 == 0){
+        return 0;
+    }else{
+        for (int64_t i = 11; i * i <= num; i+=6) {
+            if (num % i == 0 || num % (i+2) == 0) {
+                return 0;  // no es primo
+            }
         }
-    }
-    return 1;  // si es primo  
+        return 1;  // si es primo
+    } 
 }
 
 /**

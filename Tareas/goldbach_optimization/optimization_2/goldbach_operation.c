@@ -17,7 +17,7 @@
  */
 int is_prime(int64_t number) {
     if(number == 2 || number == 3 || number == 5 || number == 7){return 1;}
-    if(number%2 == 0 || number%3 == 0 || number%5 == 0 || number%7 == 0 ){
+    if(number%2 == 0 || number%3 == 0 || number%5 == 0 || number%7 == 0){
         return 0;
     }else{
         for (int64_t i = 11; i * i <= number; i+=6) {
@@ -26,7 +26,7 @@ int is_prime(int64_t number) {
             }
         }
         return 1;  // si es primo
-    }
+    } 
 }
 
 /**

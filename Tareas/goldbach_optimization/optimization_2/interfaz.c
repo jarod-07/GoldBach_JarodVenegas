@@ -53,10 +53,28 @@ void print_goldbach(shared_data_t* shared_data) {
  */
 int input_number(shared_data_t* shared_data) {
     int64_t number = 0;
+    int size = 10;
 
-    if (&shared_data->numbers_queue) {
+    shared_data->numbers_vec = (int64_t*)calloc(size, sizeof(int64_t));
+
+    if (shared_data->numbers_vec) {
         while (fscanf(shared_data->input, "%" SCNu64, &number) == 1) {
-            queue_enqueue(&shared_data->numbers_queue, number);
+            if (shared_data->number_counter == size) {
+                shared_data->numbers_vec = (int64_t*)realloc(
+                    shared_data->numbers_vec, (size * 2) * sizeof(int64_t));
+                if (shared_data->numbers_vec == NULL) {
+                    fprintf(shared_data->output, "Memory not reallocated\n");
+                    exit(0);
+                } else {
+                    size = size * 2;
+
+                    shared_data->numbers_vec[shared_data->number_counter] =
+                        number;
+                }
+            } else {
+                shared_data->numbers_vec[shared_data->number_counter] = number;
+            }
+
             shared_data->number_counter++;
         }
 

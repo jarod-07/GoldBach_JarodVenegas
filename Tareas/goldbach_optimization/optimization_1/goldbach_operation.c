@@ -16,14 +16,17 @@
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int is_prime(int64_t number) {
-    if(number == 2){return 1;}
-    if(number % 2 == 0){return 0;}
-    for (int64_t i = 1; i < number/4; i++) {
-        if (number % ((2*i)+1) == 0) {
-            return 0;  // no es primo
+    if(number == 2 || number == 3 || number == 5 || number == 7){return 1;}
+    if(number%2 == 0 || number%3 == 0 || number%5 == 0 || number%7 == 0 ){
+        return 0;
+    }else{
+        for (int64_t i = 11; i * i <= number; i+=6) {
+            if (number % i == 0 || number % (i+2) == 0) {
+                return 0;  // no es primo
+            }
         }
+        return 1;  // si es primo
     }
-    return 1;  // si es primo  
 }
 
 /**
