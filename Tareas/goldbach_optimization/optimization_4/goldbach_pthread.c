@@ -187,25 +187,6 @@ void* run_threads(void* data) {
     return 0;
 }
 
-/*
-int64_t distribution =
-    shared_data->number_counter / shared_data->number_of_threads;
-for (int64_t i = 0; i < shared_data->number_of_threads; i++) {
-    if (private_data->thread_id == i) {
-        int64_t position = private_data->thread_id * distribution;
-        int64_t new_distribution =
-            distribution * (private_data->thread_id + 1);
-        for (int64_t y = position; y < new_distribution; y++) {
-            int64_t number = shared_data->numbers_vec[y];
-            private_data->position = y;
-            goldbach(private_data, number);
-            printf("\n%zu hola: %zu",private_data->thread_id,number);
-        }
-
-    }
-}
-*/
-
 /**
  * @brief Crea los hilos y envia cada hilo a ejecutar el codigo correspondiente
  * @param shared_data struct shared_data de todos los hilos

@@ -38,9 +38,15 @@ int main(int argc, char* argv[]) {
         if(even_odd(size) == 0){
             size = size -1;
         }
-        for(int64_t i = 1; i < size/2; i++){
+        for(int64_t i = 1; i < size/2; i= i+3){
             if(is_prime((i*2)+1)){
                 shared_data->prime_vector[(i*2)+1] = 1;
+            }
+            if(is_prime((i*2)+3)){
+                shared_data->prime_vector[(i*2)+3] = 1;
+            }
+            if(is_prime((i*2)+3)){
+                shared_data->prime_vector[(i*2)+5] = 1;
             }
         }
         shared_data->sums_vector =
