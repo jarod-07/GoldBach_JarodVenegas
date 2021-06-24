@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
             if(is_prime((i*2)+3)){
                 shared_data->prime_vector[(i*2)+3] = 1;
             }
-            if(is_prime((i*2)+3)){
+            if(is_prime((i*2)+5)){
                 shared_data->prime_vector[(i*2)+5] = 1;
             }
         }
