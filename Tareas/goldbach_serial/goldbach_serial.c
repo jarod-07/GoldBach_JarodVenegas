@@ -22,9 +22,9 @@
  *
  */
 typedef struct {
-    int64_t first;
-    int64_t second;
-    int64_t third;
+  int64_t first;
+  int64_t second;
+  int64_t third;
 } Sumas;
 /**
  * @brief Determina si un numero es primo
@@ -32,17 +32,19 @@ typedef struct {
  * @return devuelve un 1 si es primo y un 0 si no es primo
  */
 int es_primo(int64_t num) {
-    if(num == 2 || num == 3 || num == 5 || num == 7){return 1;}
-    if(num%2 == 0 || num%3 == 0 || num%5 == 0 || num%7 == 0){
-        return 0;
-    }else{
-        for (int64_t i = 11; i * i <= num; i+=6) {
-            if (num % i == 0 || num % (i+2) == 0) {
-                return 0;  // no es primo
-            }
-        }
-        return 1;  // si es primo
-    } 
+  if (num == 2 || num == 3 || num == 5 || num == 7) {
+    return 1;
+  }
+  if (num % 2 == 0 || num % 3 == 0 || num % 5 == 0 || num % 7 == 0) {
+    return 0;
+  } else {
+    for (int64_t i = 11; i * i <= num; i += 6) {
+      if (num % i == 0 || num % (i + 2) == 0) {
+        return 0;  // no es primo
+      }
+    }
+    return 1;  // si es primo
+  }
 }
 
 /**
@@ -51,13 +53,13 @@ int es_primo(int64_t num) {
  * @return devuelve un 1 si es par y un 0 si es impar
  */
 int par_impar(int64_t num) {
-    if (num < 0) {
-        num = num * -1;
-    }
-    if (num % 2 == 0) {
-        return 1;  // el numero es par
-    }
-    return 0;  // el numero es impar
+  if (num < 0) {
+    num = num * -1;
+  }
+  if (num % 2 == 0) {
+    return 1;  // el numero es par
+  }
+  return 0;  // el numero es impar
 }
 
 /**
@@ -68,41 +70,40 @@ int par_impar(int64_t num) {
  * @return Una struct de Sumas
  */
 Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
-    int64_t numero = 0;
+  int64_t numero = 0;
 
-    if (num_temp < 0) {
-        numero = num_temp * -1;
-    } else {
-        numero = num_temp;
-    }
-    int tamano = 10;
+  if (num_temp < 0) {
+    numero = num_temp * -1;
+  } else {
+    numero = num_temp;
+  }
+  int tamano = 10;
 
-    Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
-    int64_t pivote = 2;
-    for (int64_t i = numero - pivote; i > 2; i--) {
-        if ((es_primo(pivote) == 1) && (es_primo(i) == 1) && pivote <= i) {
-            if (num_temp < 0) {
-                sumas[*contador].first = (int64_t)pivote;
-                sumas[*contador].second = (int64_t)i;
-            }
+  Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
+  int64_t pivote = 2;
+  for (int64_t i = numero - pivote; i > 2; i--) {
+    if ((es_primo(pivote) == 1) && (es_primo(i) == 1) && pivote <= i) {
+      if (num_temp < 0) {
+        sumas[*contador].first = (int64_t)pivote;
+        sumas[*contador].second = (int64_t)i;
+      }
 
-            *contador = *contador + 1;
-            if (*contador == tamano && numero < 0) {
-                tamano = tamano * 2;
-                Sumas* sumas_temp =
-                    realloc(sumas, (tamano * 2) * sizeof(Sumas));
-                if (sumas_temp == NULL) {
-                    fprintf(output, "Memory not reallocated\n");
-                    exit(0);
-                } else {
-                    sumas = sumas_temp;
-                }
-            }
+      *contador = *contador + 1;
+      if (*contador == tamano && numero < 0) {
+        tamano = tamano * 2;
+        Sumas* sumas_temp = realloc(sumas, (tamano * 2) * sizeof(Sumas));
+        if (sumas_temp == NULL) {
+          fprintf(output, "Memory not reallocated\n");
+          exit(0);
+        } else {
+          sumas = sumas_temp;
         }
-        pivote++;
+      }
     }
+    pivote++;
+  }
 
-    return sumas;
+  return sumas;
 }
 
 /**
@@ -113,50 +114,48 @@ Sumas* conjetura_fuerte(int64_t num_temp, int64_t* contador, FILE* output) {
  * @return Una struct de Sumas
  */
 Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
-    int64_t numero = 0;
+  int64_t numero = 0;
 
-    if (num_temp < 0) {
-        numero = num_temp * -1;
-    } else {
-        numero = num_temp;
-    }
-    int tamano = 10;
-    Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
+  if (num_temp < 0) {
+    numero = num_temp * -1;
+  } else {
+    numero = num_temp;
+  }
+  int tamano = 10;
+  Sumas* sumas = (Sumas*)calloc(tamano, sizeof(Sumas));
 
-    for (int64_t i = 2; i < numero; i++) {
-        if (es_primo(i) == 1) {
-            for (int64_t j = i; j < numero; j++) {
-                if (es_primo(j)) {
-                    int64_t numero_posible = numero - (i + j);
-                    if (i + j + numero_posible == numero &&
-                        es_primo(numero_posible)) {
-                        if (numero_posible > 2 && numero_posible >= j) {
-                            if (num_temp < 0) {
-                                sumas[*contador].first = (int64_t)i;
-                                sumas[*contador].second = (int64_t)j;
-                                sumas[*contador].third =
-                                    (int64_t)numero_posible;
-                            }
-                            *contador = *contador + 1;
-                            if (*contador == tamano && num_temp < 0) {
-                                Sumas* sumas_temp = realloc(
-                                    sumas, (tamano * 2) * sizeof(Sumas));
-                                if (sumas_temp == NULL) {
-                                    fprintf(output, "Memory not reallocated\n");
-                                    exit(0);
-                                } else {
-                                    tamano = tamano * 2;
-                                    sumas = sumas_temp;
-                                }
-                            }
-                        }
-                    }
+  for (int64_t i = 2; i < numero; i++) {
+    if (es_primo(i) == 1) {
+      for (int64_t j = i; j < numero; j++) {
+        if (es_primo(j)) {
+          int64_t numero_posible = numero - (i + j);
+          if (i + j + numero_posible == numero && es_primo(numero_posible)) {
+            if (numero_posible > 2 && numero_posible >= j) {
+              if (num_temp < 0) {
+                sumas[*contador].first = (int64_t)i;
+                sumas[*contador].second = (int64_t)j;
+                sumas[*contador].third = (int64_t)numero_posible;
+              }
+              *contador = *contador + 1;
+              if (*contador == tamano && num_temp < 0) {
+                Sumas* sumas_temp =
+                    realloc(sumas, (tamano * 2) * sizeof(Sumas));
+                if (sumas_temp == NULL) {
+                  fprintf(output, "Memory not reallocated\n");
+                  exit(0);
+                } else {
+                  tamano = tamano * 2;
+                  sumas = sumas_temp;
                 }
+              }
             }
+          }
         }
+      }
     }
+  }
 
-    return sumas;
+  return sumas;
 }
 
 /**
@@ -169,53 +168,53 @@ Sumas* conjetura_debil(int64_t num_temp, int64_t* contador, FILE* output) {
  */
 void imprimir_debil(int64_t num_temp, int64_t contador, Sumas* sumas,
                     FILE* output) {
-    int64_t primera;
-    int64_t segunda;
-    int64_t tercera;
-    int64_t numero = 0;
-    if (num_temp < 0) {
-        numero = num_temp * -1;
-    } else {
-        numero = num_temp;
-    }
-    if (num_temp < 0) {
-        fprintf(output,
-                "-%" PRIu64
-                ": "
-                "%" PRIu64 " sums: ",
-                numero, contador);
-        for (int64_t i = 0; i < contador; i++) {
-            if (i != contador - 1) {
-                primera = sumas[i].first;
-                segunda = sumas[i].second;
-                tercera = sumas[i].third;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 ", ",
-                        primera, segunda, tercera);
-            } else {
-                primera = sumas[i].first;
-                segunda = sumas[i].second;
-                tercera = sumas[i].third;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 "\n",
-                        primera, segunda, tercera);
-            }
-        }
-    } else {
+  int64_t primera;
+  int64_t segunda;
+  int64_t tercera;
+  int64_t numero = 0;
+  if (num_temp < 0) {
+    numero = num_temp * -1;
+  } else {
+    numero = num_temp;
+  }
+  if (num_temp < 0) {
+    fprintf(output,
+            "-%" PRIu64
+            ": "
+            "%" PRIu64 " sums: ",
+            numero, contador);
+    for (int64_t i = 0; i < contador; i++) {
+      if (i != contador - 1) {
+        primera = sumas[i].first;
+        segunda = sumas[i].second;
+        tercera = sumas[i].third;
         fprintf(output,
                 "%" PRIu64
-                ": "
-                "%" PRIu64 " sums\n",
-                num_temp, contador);
+                " + "
+                "%" PRIu64
+                " + "
+                "%" PRIu64 ", ",
+                primera, segunda, tercera);
+      } else {
+        primera = sumas[i].first;
+        segunda = sumas[i].second;
+        tercera = sumas[i].third;
+        fprintf(output,
+                "%" PRIu64
+                " + "
+                "%" PRIu64
+                " + "
+                "%" PRIu64 "\n",
+                primera, segunda, tercera);
+      }
     }
+  } else {
+    fprintf(output,
+            "%" PRIu64
+            ": "
+            "%" PRIu64 " sums\n",
+            num_temp, contador);
+  }
 }
 
 /**
@@ -228,46 +227,46 @@ void imprimir_debil(int64_t num_temp, int64_t contador, Sumas* sumas,
  */
 void imprimir_fuerte(int64_t num_temp, int64_t contador, Sumas* sumas,
                      FILE* output) {
-    int64_t primera;
-    int64_t segunda;
-    int64_t numero = 0;
-    if (num_temp < 0) {
-        numero = num_temp * -1;
-    } else {
-        numero = num_temp;
-    }
-    if (num_temp < 0) {
-        fprintf(output,
-                "-%" PRIu64
-                ": "
-                "%" PRIu64 " sums: ",
-                numero, contador);
-        for (int64_t i = 0; i < contador; i++) {
-            if (i != contador - 1) {
-                primera = sumas[i].first;
-                segunda = sumas[i].second;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 ", ",
-                        primera, segunda);
-            } else {
-                primera = sumas[i].first;
-                segunda = sumas[i].second;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 "\n",
-                        primera, segunda);
-            }
-        }
-    } else {
+  int64_t primera;
+  int64_t segunda;
+  int64_t numero = 0;
+  if (num_temp < 0) {
+    numero = num_temp * -1;
+  } else {
+    numero = num_temp;
+  }
+  if (num_temp < 0) {
+    fprintf(output,
+            "-%" PRIu64
+            ": "
+            "%" PRIu64 " sums: ",
+            numero, contador);
+    for (int64_t i = 0; i < contador; i++) {
+      if (i != contador - 1) {
+        primera = sumas[i].first;
+        segunda = sumas[i].second;
         fprintf(output,
                 "%" PRIu64
-                ": "
-                "%" PRIu64 " sums\n",
-                num_temp, contador);
+                " + "
+                "%" PRIu64 ", ",
+                primera, segunda);
+      } else {
+        primera = sumas[i].first;
+        segunda = sumas[i].second;
+        fprintf(output,
+                "%" PRIu64
+                " + "
+                "%" PRIu64 "\n",
+                primera, segunda);
+      }
     }
+  } else {
+    fprintf(output,
+            "%" PRIu64
+            ": "
+            "%" PRIu64 " sums\n",
+            num_temp, contador);
+  }
 }
 
 /**
@@ -278,26 +277,24 @@ void imprimir_fuerte(int64_t num_temp, int64_t contador, Sumas* sumas,
  * @return void
  */
 void goldbach(int64_t num, FILE* output) {
-    int64_t contador_sumas = 0;
-    if (num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63) - 1)) {
-        fprintf(output, "NA");
+  int64_t contador_sumas = 0;
+  if (num > ((int64_t)pow(2, 63) - 1) || num < -((int64_t)pow(2, 63) - 1)) {
+    fprintf(output, "NA");
+  } else {
+    if ((num <= 5 && num >= -5)) {
+      fprintf(output, "%ld :NA\n", num);
     } else {
-        if ((num <= 5 && num >= -5)) {
-            fprintf(output, "%ld :NA\n", num);
-        } else {
-            if (par_impar(num) == 1) {
-                Sumas* sumas_pares =
-                    conjetura_fuerte(num, &contador_sumas, output);
-                imprimir_fuerte(num, contador_sumas, sumas_pares, output);
-                free(sumas_pares);
-            } else {
-                Sumas* sumas_impares =
-                    conjetura_debil(num, &contador_sumas, output);
-                imprimir_debil(num, contador_sumas, sumas_impares, output);
-                free(sumas_impares);
-            }
-        }
+      if (par_impar(num) == 1) {
+        Sumas* sumas_pares = conjetura_fuerte(num, &contador_sumas, output);
+        imprimir_fuerte(num, contador_sumas, sumas_pares, output);
+        free(sumas_pares);
+      } else {
+        Sumas* sumas_impares = conjetura_debil(num, &contador_sumas, output);
+        imprimir_debil(num, contador_sumas, sumas_impares, output);
+        free(sumas_impares);
+      }
     }
+  }
 }
 
 /**
@@ -307,38 +304,38 @@ void goldbach(int64_t num, FILE* output) {
  * @return void
  */
 void iniciar(FILE* input, FILE* output) {
-    int64_t num;
-    int tamano = 10;
-    int contador = 0;
-    int* valores = (int*)calloc(tamano, sizeof(int));
-    while (fscanf(input, "%" SCNu64, &num) == 1) {
-        if (contador == tamano) {
-            valores = (int*)realloc(valores, (tamano * 2) * sizeof(int));
-            if (valores == NULL) {
-                fprintf(output, "Memory not reallocated\n");
-                exit(0);
-            } else {
-                tamano = tamano * 2;
-                valores[contador] = num;
-            }
-        } else {
-            valores[contador] = num;
-        }
-        contador++;
+  int64_t num;
+  int tamano = 10;
+  int contador = 0;
+  int* valores = (int*)calloc(tamano, sizeof(int));
+  while (fscanf(input, "%" SCNu64, &num) == 1) {
+    if (contador == tamano) {
+      valores = (int*)realloc(valores, (tamano * 2) * sizeof(int));
+      if (valores == NULL) {
+        fprintf(output, "Memory not reallocated\n");
+        exit(0);
+      } else {
+        tamano = tamano * 2;
+        valores[contador] = num;
+      }
+    } else {
+      valores[contador] = num;
     }
-    for (int x = 0; x < contador; x++) {
-        goldbach(valores[x], output);
-    }
-    free(valores);
+    contador++;
+  }
+  for (int x = 0; x < contador; x++) {
+    goldbach(valores[x], output);
+  }
+  free(valores);
 }
 
 /**
  * @return La interfaz del progama de la Conjetura De GoldBach
  */
 int main(void) {
-    FILE* input = stdin;
-    FILE* output = stdout;
-    iniciar(input, output);
+  FILE* input = stdin;
+  FILE* output = stdout;
+  iniciar(input, output);
 
-    return 0;
+  return 0;
 }

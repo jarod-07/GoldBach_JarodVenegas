@@ -25,13 +25,13 @@
  *
  */
 typedef struct {
-    int64_t first;
-    int64_t second;
-    int64_t third;
-    int64_t number;
-    int64_t sums;
-    int major_limit;
-    int minor_limit;
+  int64_t first;
+  int64_t second;
+  int64_t third;
+  int64_t number;
+  int64_t sums;
+  int major_limit;
+  int minor_limit;
 } Sums;
 
 /**
@@ -40,14 +40,14 @@ typedef struct {
  *
  */
 typedef struct {
-    FILE* input;
-    FILE* output;
-    Sums** sums_vector;
-    int64_t number_counter;
-    int64_t* numbers_vec;
-    int64_t* prime_vector;
-    int64_t thread_position;
-    int64_t number_of_threads;
+  FILE* input;
+  FILE* output;
+  Sums** sums_vector;
+  int64_t number_counter;
+  int64_t* numbers_vec;
+  int64_t* prime_vector;
+  int64_t thread_position;
+  int64_t number_of_threads;
 } shared_data_t;
 
 /**
@@ -55,10 +55,10 @@ typedef struct {
  *
  */
 typedef struct {
-    int64_t position;
-    int64_t thread_id;
-    int64_t goldbach_number;
-    shared_data_t* shared_data;
+  int64_t position;
+  int64_t thread_id;
+  int64_t goldbach_number;
+  shared_data_t* shared_data;
 } private_data_t;
 
 #endif

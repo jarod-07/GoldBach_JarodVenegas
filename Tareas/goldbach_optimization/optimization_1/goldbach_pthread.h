@@ -11,12 +11,11 @@
 #ifndef GOLDBACH_PTHREAD
 #define GOLDBACH_PTHREAD
 
-#include <pthread.h>
 #include <assert.h>
+#include <pthread.h>
 
-#include "queue.h"
 #include "goldbach_operation.h"
-
+#include "queue.h"
 
 /**
  * @brief Estructura utilizada para almacenar los datos compartidos entre la n
@@ -24,14 +23,14 @@
  *
  */
 typedef struct {
-    FILE* input;
-    FILE* output;
-    Sums** sums_vector;
-    int64_t number_counter;
-    queue_t numbers_queue; //thread save
-    pthread_mutex_t sem_get_position;
-    int64_t thread_position;
-    int64_t number_of_threads;
+  FILE* input;
+  FILE* output;
+  Sums** sums_vector;
+  int64_t number_counter;
+  queue_t numbers_queue;  // thread save
+  pthread_mutex_t sem_get_position;
+  int64_t thread_position;
+  int64_t number_of_threads;
 } shared_data_t;
 
 /**
@@ -39,10 +38,10 @@ typedef struct {
  *
  */
 typedef struct {
-    int64_t position;
-    int64_t thread_id;
-    int64_t goldbach_number;
-    shared_data_t* shared_data;
+  int64_t position;
+  int64_t thread_id;
+  int64_t goldbach_number;
+  shared_data_t* shared_data;
 } private_data_t;
 
 void goldbach(private_data_t* private_data, int64_t number);

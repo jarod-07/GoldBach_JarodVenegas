@@ -17,33 +17,33 @@
  * @return void
  */
 void print_goldbach(shared_data_t* shared_data) {
-    for (int64_t i = 0; i < shared_data->number_counter; i++) {
-        if (shared_data->sums_vector[i]->major_limit == 0) {
-            fprintf(shared_data->output, "NA");
-        } else {
-        }
-        if (shared_data->sums_vector[i]->minor_limit == 0) {
-            if (shared_data->sums_vector[i]->number < 0) {
-                shared_data->sums_vector[i]->number =
-                    shared_data->sums_vector[i]->number * -1;
-                fprintf(shared_data->output, "-%" PRIu64 " : NA\n",
-                        shared_data->sums_vector[i]->number);
-            } else {
-                fprintf(shared_data->output, "%" PRIu64 " : NA\n",
-                        shared_data->sums_vector[i]->number);
-            }
-        } else {
-            if (shared_data->sums_vector[i]->number % 2 == 0) {
-                print_strong(shared_data->sums_vector[i]->number,
-                             shared_data->sums_vector[i]->sums,
-                             shared_data->sums_vector[i], shared_data->output);
-            } else {
-                print_weak(shared_data->sums_vector[i]->number,
-                           shared_data->sums_vector[i]->sums,
-                           shared_data->sums_vector[i], shared_data->output);
-            }
-        }
+  for (int64_t i = 0; i < shared_data->number_counter; i++) {
+    if (shared_data->sums_vector[i]->major_limit == 0) {
+      fprintf(shared_data->output, "NA");
+    } else {
     }
+    if (shared_data->sums_vector[i]->minor_limit == 0) {
+      if (shared_data->sums_vector[i]->number < 0) {
+        shared_data->sums_vector[i]->number =
+            shared_data->sums_vector[i]->number * -1;
+        fprintf(shared_data->output, "-%" PRIu64 " : NA\n",
+                shared_data->sums_vector[i]->number);
+      } else {
+        fprintf(shared_data->output, "%" PRIu64 " : NA\n",
+                shared_data->sums_vector[i]->number);
+      }
+    } else {
+      if (shared_data->sums_vector[i]->number % 2 == 0) {
+        print_strong(shared_data->sums_vector[i]->number,
+                     shared_data->sums_vector[i]->sums,
+                     shared_data->sums_vector[i], shared_data->output);
+      } else {
+        print_weak(shared_data->sums_vector[i]->number,
+                   shared_data->sums_vector[i]->sums,
+                   shared_data->sums_vector[i], shared_data->output);
+      }
+    }
+  }
 }
 
 /**
@@ -52,19 +52,19 @@ void print_goldbach(shared_data_t* shared_data) {
  * @param shared_data struct shared_data
  */
 int input_number(shared_data_t* shared_data) {
-    int64_t number = 0;
+  int64_t number = 0;
 
-    if (&shared_data->numbers_queue) {
-        while (fscanf(shared_data->input, "%" SCNu64, &number) == 1) {
-            queue_enqueue(&shared_data->numbers_queue, number);
-            shared_data->number_counter++;
-        }
-
-    } else {
-        fprintf(shared_data->output, "Could not allocate the memeory.");
-        return EXIT_FAILURE;
+  if (&shared_data->numbers_queue) {
+    while (fscanf(shared_data->input, "%" SCNu64, &number) == 1) {
+      queue_enqueue(&shared_data->numbers_queue, number);
+      shared_data->number_counter++;
     }
-    return EXIT_SUCCESS;
+
+  } else {
+    fprintf(shared_data->output, "Could not allocate the memeory.");
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
 
 /**
@@ -76,51 +76,51 @@ int input_number(shared_data_t* shared_data) {
  * @return void
  */
 void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
-    int64_t first;
-    int64_t second;
-    int64_t third;
-    int64_t number = 0;
-    if (num_temp < 0) {
-        number = num_temp * -1;
-    }
-    if (num_temp < 0) {
-        fprintf(output,
-                "-%" PRIu64
-                ": "
-                "%" PRIu64 " sums: ",
-                number, counter);
-        for (int i = 0; i < counter; i++) {
-            if (i != counter - 1) {
-                first = sums[i].first;
-                second = sums[i].second;
-                third = sums[i].third;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 ", ",
-                        first, second, third);
-            } else {
-                first = sums[i].first;
-                second = sums[i].second;
-                third = sums[i].third;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 "\n",
-                        first, second, third);
-            }
-        }
-    } else {
+  int64_t first;
+  int64_t second;
+  int64_t third;
+  int64_t number = 0;
+  if (num_temp < 0) {
+    number = num_temp * -1;
+  }
+  if (num_temp < 0) {
+    fprintf(output,
+            "-%" PRIu64
+            ": "
+            "%" PRIu64 " sums: ",
+            number, counter);
+    for (int i = 0; i < counter; i++) {
+      if (i != counter - 1) {
+        first = sums[i].first;
+        second = sums[i].second;
+        third = sums[i].third;
         fprintf(output,
                 "%" PRIu64
-                ": "
-                "%" PRIu64 " sums\n",
-                num_temp, counter);
+                " + "
+                "%" PRIu64
+                " + "
+                "%" PRIu64 ", ",
+                first, second, third);
+      } else {
+        first = sums[i].first;
+        second = sums[i].second;
+        third = sums[i].third;
+        fprintf(output,
+                "%" PRIu64
+                " + "
+                "%" PRIu64
+                " + "
+                "%" PRIu64 "\n",
+                first, second, third);
+      }
     }
+  } else {
+    fprintf(output,
+            "%" PRIu64
+            ": "
+            "%" PRIu64 " sums\n",
+            num_temp, counter);
+  }
 }
 
 /**
@@ -132,42 +132,42 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
  * @return void
  */
 void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
-    int64_t first;
-    int64_t second;
-    int64_t number = 0;
-    if (num_temp < 0) {
-        number = num_temp * -1;
-    }
-    if (num_temp < 0) {
-        fprintf(output,
-                "-%" PRIu64
-                ": "
-                "%" PRIu64 " sums: ",
-                number, counter);
-        for (int i = 0; i < counter; i++) {
-            if (i != counter - 1) {
-                first = sums[i].first;
-                second = sums[i].second;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 ", ",
-                        first, second);
-            } else {
-                first = sums[i].first;
-                second = sums[i].second;
-                fprintf(output,
-                        "%" PRIu64
-                        " + "
-                        "%" PRIu64 "\n",
-                        first, second);
-            }
-        }
-    } else {
+  int64_t first;
+  int64_t second;
+  int64_t number = 0;
+  if (num_temp < 0) {
+    number = num_temp * -1;
+  }
+  if (num_temp < 0) {
+    fprintf(output,
+            "-%" PRIu64
+            ": "
+            "%" PRIu64 " sums: ",
+            number, counter);
+    for (int i = 0; i < counter; i++) {
+      if (i != counter - 1) {
+        first = sums[i].first;
+        second = sums[i].second;
         fprintf(output,
                 "%" PRIu64
-                ": "
-                "%" PRIu64 " sums\n",
-                num_temp, counter);
+                " + "
+                "%" PRIu64 ", ",
+                first, second);
+      } else {
+        first = sums[i].first;
+        second = sums[i].second;
+        fprintf(output,
+                "%" PRIu64
+                " + "
+                "%" PRIu64 "\n",
+                first, second);
+      }
     }
+  } else {
+    fprintf(output,
+            "%" PRIu64
+            ": "
+            "%" PRIu64 " sums\n",
+            num_temp, counter);
+  }
 }

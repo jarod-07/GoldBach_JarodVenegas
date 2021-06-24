@@ -25,13 +25,13 @@
  *
  */
 typedef struct {
-    int64_t first;
-    int64_t second;
-    int64_t third;
-    int64_t number;
-    int64_t sums;
-    int major_limit;
-    int minor_limit;
+  int64_t first;
+  int64_t second;
+  int64_t third;
+  int64_t number;
+  int64_t sums;
+  int major_limit;
+  int minor_limit;
 } Sums;
 
 int is_prime(int64_t number);

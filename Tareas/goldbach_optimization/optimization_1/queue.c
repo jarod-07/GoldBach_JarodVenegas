@@ -15,10 +15,10 @@ bool queue_is_empty_unsafe(const queue_t* queue);
  * @return int inicializa el semaforo
  */
 int queue_init(queue_t* queue) {
-    assert(queue);
-    queue->head = NULL;
-    queue->tail = NULL;
-    return pthread_mutex_init(&queue->can_access_queue, NULL);
+  assert(queue);
+  queue->head = NULL;
+  queue->tail = NULL;
+  return pthread_mutex_init(&queue->can_access_queue, NULL);
 }
 
 /**
@@ -27,8 +27,8 @@ int queue_init(queue_t* queue) {
  * @return int destruye el semaforo
  */
 int queue_destroy(queue_t* queue) {
-    queue_clear(queue);
-    return pthread_mutex_destroy(&queue->can_access_queue);
+  queue_clear(queue);
+  return pthread_mutex_destroy(&queue->can_access_queue);
 }
 
 /**
@@ -37,8 +37,8 @@ int queue_destroy(queue_t* queue) {
  * @return bool dependiendo si esta vacio o no
  */
 bool queue_is_empty_unsafe(const queue_t* queue) {
-    assert(queue);
-    return queue->head == NULL;
+  assert(queue);
+  return queue->head == NULL;
 }
 
 /**
@@ -48,11 +48,11 @@ bool queue_is_empty_unsafe(const queue_t* queue) {
  * @return bool dependiendo si esta vacio o no
  */
 bool queue_is_empty(queue_t* queue) {
-    assert(queue);
-    pthread_mutex_lock(&queue->can_access_queue);
-    bool result = queue_is_empty_unsafe(queue);
-    pthread_mutex_unlock(&queue->can_access_queue);
-    return result;
+  assert(queue);
+  pthread_mutex_lock(&queue->can_access_queue);
+  bool result = queue_is_empty_unsafe(queue);
+  pthread_mutex_unlock(&queue->can_access_queue);
+  return result;
 }
 
 /**
@@ -63,26 +63,26 @@ bool queue_is_empty(queue_t* queue) {
  * @return int de 64 bits
  */
 int64_t queue_enqueue(queue_t* queue, const int64_t data) {
-    assert(queue);
-    int error = EXIT_SUCCESS;
+  assert(queue);
+  int error = EXIT_SUCCESS;
 
-    queue_node_t* new_node = (queue_node_t*)calloc(1, sizeof(queue_node_t));
+  queue_node_t* new_node = (queue_node_t*)calloc(1, sizeof(queue_node_t));
 
-    if (new_node) {
-        new_node->data = data;
+  if (new_node) {
+    new_node->data = data;
 
-        pthread_mutex_lock(&queue->can_access_queue);
-        if (queue->tail) {
-            queue->tail = queue->tail->next = new_node;
-        } else {
-            queue->head = queue->tail = new_node;
-        }
-        pthread_mutex_unlock(&queue->can_access_queue);
+    pthread_mutex_lock(&queue->can_access_queue);
+    if (queue->tail) {
+      queue->tail = queue->tail->next = new_node;
     } else {
-        error = EXIT_FAILURE;
+      queue->head = queue->tail = new_node;
     }
+    pthread_mutex_unlock(&queue->can_access_queue);
+  } else {
+    error = EXIT_FAILURE;
+  }
 
-    return error;
+  return error;
 }
 
 /**
@@ -92,21 +92,21 @@ int64_t queue_enqueue(queue_t* queue, const int64_t data) {
  * @return int de 64 bits
  */
 int64_t queue_dequeue(queue_t* queue, int64_t* data) {
-    assert(queue);
-    int error = 0;
+  assert(queue);
+  int error = 0;
 
-    pthread_mutex_lock(&queue->can_access_queue);
-    if (!queue_is_empty_unsafe(queue)) {
-        if (data) {
-            *data = queue->head->data;
-        }
-        queue_remove_first_unsafe(queue);
-    } else {
-        error = EXIT_FAILURE;
+  pthread_mutex_lock(&queue->can_access_queue);
+  if (!queue_is_empty_unsafe(queue)) {
+    if (data) {
+      *data = queue->head->data;
     }
-    pthread_mutex_unlock(&queue->can_access_queue);
+    queue_remove_first_unsafe(queue);
+  } else {
+    error = EXIT_FAILURE;
+  }
+  pthread_mutex_unlock(&queue->can_access_queue);
 
-    return error;
+  return error;
 }
 
 /**
@@ -115,14 +115,14 @@ int64_t queue_dequeue(queue_t* queue, int64_t* data) {
  * @return void
  */
 void queue_remove_first_unsafe(queue_t* queue) {
-    assert(queue);
-    assert(!queue_is_empty_unsafe(queue));
-    queue_node_t* node = queue->head;
-    queue->head = queue->head->next;
-    free(node);
-    if (queue->head == NULL) {
-        queue->tail = NULL;
-    }
+  assert(queue);
+  assert(!queue_is_empty_unsafe(queue));
+  queue_node_t* node = queue->head;
+  queue->head = queue->head->next;
+  free(node);
+  if (queue->head == NULL) {
+    queue->tail = NULL;
+  }
 }
 
 /**
@@ -131,10 +131,10 @@ void queue_remove_first_unsafe(queue_t* queue) {
  * @return void
  */
 void queue_clear(queue_t* queue) {
-    assert(queue);
-    pthread_mutex_lock(&queue->can_access_queue);
-    while (!queue_is_empty_unsafe(queue)) {
-        queue_remove_first_unsafe(queue);
-    }
-    pthread_mutex_unlock(&queue->can_access_queue);
+  assert(queue);
+  pthread_mutex_lock(&queue->can_access_queue);
+  while (!queue_is_empty_unsafe(queue)) {
+    queue_remove_first_unsafe(queue);
+  }
+  pthread_mutex_unlock(&queue->can_access_queue);
 }

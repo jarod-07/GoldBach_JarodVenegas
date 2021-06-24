@@ -15,7 +15,9 @@
 
 int is_prime(int64_t number);
 int even_odd(int64_t number);
-Sums* strong_conjecture(int64_t* prime_vector, int64_t num_temp, int64_t* counter, FILE* output);
-Sums* weak_conjecture(int64_t* prime_vector, int64_t num_temp, int64_t* counter, FILE* output);
+Sums* strong_conjecture(int64_t* prime_vector, int64_t num_temp,
+                        int64_t* counter, FILE* output);
+Sums* weak_conjecture(int64_t* prime_vector, int64_t num_temp, int64_t* counter,
+                      FILE* output);
 
 #endif
