@@ -27,9 +27,11 @@ typedef struct {
   int64_t third;
 } Sumas;
 /**
- * @brief Determina si un numero es primo
+ * @brief Determina si un numero es primo. Se obtuvo referencias del codigo en
+ * internet.
  * @param numero entero
  * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @link https://en.wikipedia.org/wiki/Primality_test
  */
 int es_primo(int64_t num) {
   if (num == 2 || num == 3 || num == 5 || num == 7) {

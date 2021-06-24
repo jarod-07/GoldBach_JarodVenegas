@@ -11,9 +11,11 @@
 #include "goldbach_operation.h"
 
 /**
- * @brief Determina si un numero es primo
- * @param number entero de 64 bits
+ * @brief Determina si un numero es primo. Se obtuvo referencias del codigo en
+ * internet.
+ * @param numero entero
  * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @link https://en.wikipedia.org/wiki/Primality_test
  */
 int is_prime(int64_t number) {
   if (number == 2 || number == 3 || number == 5 || number == 7) {

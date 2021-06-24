@@ -117,8 +117,8 @@ void goldbach(private_data_t* private_data, int64_t number) {
 }
 
 /**
- * @brief Funcion para controlar los hilos: reparte el trabajo equitativemente
- * entre los hilos
+ * @brief Funcion para controlar los hilos. Cada hilo agarra un numero apenas
+ * termina.
  * @param data void que recibe un private_data
  * @return void
  */

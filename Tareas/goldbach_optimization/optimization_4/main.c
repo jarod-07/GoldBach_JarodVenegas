@@ -32,31 +32,48 @@ int main(int argc, char* argv[]) {
     }
     int64_t size = 0;
     input_number(shared_data, &size);
+    // Empieza la creacion del vector de primos
     shared_data->prime_vector = (int64_t*)calloc(size, sizeof(int64_t));
+    // Se crea un vector con el numero mas grande de los numeros ingresados
     shared_data->prime_vector[2] = 1;
+    // Por si el numero es impar
     if (even_odd(size) == 0) {
       size = size - 1;
     }
+    // Solo es necesario recorrer hasta la mitad del numero
     for (int64_t i = 1; i < size / 2; i = i + 3) {
+      // Aqui se revisan solo los numeros impares que son los posibles primos
+
+      // Revisa el impar mas proximo
       if (is_prime((i * 2) + 1)) {
         shared_data->prime_vector[(i * 2) + 1] = 1;
       }
+
+      // Revisa el siguiente impar del anterior
       if (is_prime((i * 2) + 3)) {
         shared_data->prime_vector[(i * 2) + 3] = 1;
       }
+
+      // Revisa el siguiente impar del anterior
       if (is_prime((i * 2) + 5)) {
         shared_data->prime_vector[(i * 2) + 5] = 1;
       }
     }
+    // Termina la creacion del vector de primos
+
+    // Se crea la estructura para almacenar los datos
     shared_data->sums_vector =
         (Sums**)calloc(shared_data->number_counter, sizeof(Sums*));
     create_threads(shared_data);
     print_goldbach(shared_data);
+
+    // Aqui se libera toda la memoria
     for (int i = 0; i < shared_data->number_counter; i++) {
       free(shared_data->sums_vector[i]);
     }
     free(shared_data->sums_vector);
     free(shared_data->numbers_vec);
+    free(shared_data->prime_vector);
     free(shared_data);
   }
   return 0;

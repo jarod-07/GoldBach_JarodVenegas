@@ -50,6 +50,7 @@ void print_goldbach(shared_data_t* shared_data) {
  * @brief Controla el ingreso de datos, los almacena en una cola y asigna una
  * posicion a cada hilo
  * @param shared_data struct shared_data
+ * @param num_temp el mayor numero de los ingresados
  */
 int input_number(shared_data_t* shared_data, int64_t* num_temp) {
   int64_t number = 0;

@@ -11,9 +11,11 @@
 #include "goldbach_operation.h"
 
 /**
- * @brief Determina si un numero es primo
- * @param number entero de 64 bits
+ * @brief Determina si un numero es primo. Se obtuvo referencias del codigo en
+ * internet.
+ * @param numero entero
  * @return devuelve un 1 si es primo y un 0 si no es primo
+ * @link https://en.wikipedia.org/wiki/Primality_test
  */
 int is_prime(int64_t number) {
   if (number == 2 || number == 3 || number == 5 || number == 7) {
@@ -49,6 +51,7 @@ int even_odd(int64_t number) {
 
 /**
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
+ * @param prime_vector vector de primos
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
  * @param output file
@@ -92,6 +95,7 @@ Sums* strong_conjecture(int64_t* prime_vector, int64_t num_temp,
 
 /**
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
+ * @param prime_vector vector de primos
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
  * @param output file
