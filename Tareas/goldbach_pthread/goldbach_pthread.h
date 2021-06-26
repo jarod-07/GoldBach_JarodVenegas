@@ -21,12 +21,9 @@
  *
  */
 typedef struct {
-  FILE* input;
-  FILE* output;
   Sums** sums_vector;
   int64_t number_counter;
   int64_t* numbers_vec;
-  int64_t thread_position;
   int64_t number_of_threads;
 } shared_data_t;
 

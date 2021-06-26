@@ -57,8 +57,7 @@ void minor_limit_def(private_data_t* private_data, int64_t number) {
  */
 void strong_conjecture_def(private_data_t* private_data, int64_t number) {
   int64_t sums_counter = 0;
-  Sums* even_sums = strong_conjecture(number, &sums_counter,
-                                      private_data->shared_data->output);
+  Sums* even_sums = strong_conjecture(number, &sums_counter);
 
   even_sums->sums = sums_counter;
   private_data->shared_data->sums_vector[private_data->position] = even_sums;
@@ -80,8 +79,7 @@ void strong_conjecture_def(private_data_t* private_data, int64_t number) {
  */
 void weak_conjecture_def(private_data_t* private_data, int64_t number) {
   int64_t sums_counter = 0;
-  Sums* odd_sums =
-      weak_conjecture(number, &sums_counter, private_data->shared_data->output);
+  Sums* odd_sums = weak_conjecture(number, &sums_counter);
   odd_sums->sums = sums_counter;
   private_data->shared_data->sums_vector[private_data->position] = odd_sums;
   private_data->shared_data->sums_vector[private_data->position]->number =
@@ -90,6 +88,25 @@ void weak_conjecture_def(private_data_t* private_data, int64_t number) {
       1;
   private_data->shared_data->sums_vector[private_data->position]->minor_limit =
       1;
+}
+
+int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
+                       int64_t num, int64_t start) {
+  int64_t normal = thread_id * ((num - start) / number_of_threads);
+  int64_t remainder = 0;
+  if (thread_id < ((num - start) % number_of_threads)) {
+    remainder = thread_id;
+  } else {
+    remainder = (num - start) % number_of_threads;
+  }
+  int64_t begin = start + normal + remainder;
+  return begin;
+}
+
+int64_t where_to_end(int64_t thread_id, int64_t number_of_threads, int64_t num,
+                     int64_t start) {
+  int64_t thread_next = thread_id + 1;
+  return where_to_begin(thread_next, number_of_threads, num, start);
 }
 // fin de metodos privados
 
@@ -126,81 +143,23 @@ void* run_threads(void* data) {
   private_data_t* private_data = (private_data_t*)data;
   shared_data_t* shared_data = private_data->shared_data;
 
-  // Caso donde el numero de hilos es menor a la cantidad de numeros
-  if ((shared_data->number_of_threads - 1) < shared_data->number_counter) {
-    // Caso ideal donde la cantidad de numerso es divisible entre la
-    // cantidad de hilos
-    if ((shared_data->number_counter % shared_data->number_of_threads) == 0) {
-      int64_t distribution =
-          shared_data->number_counter / shared_data->number_of_threads;
+  int64_t new_thread_id = private_data->thread_id;
+  int64_t new_number_of_threads = private_data->shared_data->number_of_threads;
+  int64_t new_iterations = shared_data->number_counter;
+  int64_t new_start =
+      where_to_begin(new_thread_id, new_number_of_threads, new_iterations, 0);
 
-      int64_t position = private_data->thread_id * distribution;
-      int64_t limit = distribution * (private_data->thread_id + 1);
-      for (int64_t y = position; y < limit; y++) {
-        int64_t number = shared_data->numbers_vec[y];
-        private_data->position = y;
-        goldbach(private_data, number);
-      }
+  int64_t new_end =
+      where_to_end(new_thread_id, new_number_of_threads, new_iterations, 0);
 
-    } else {
-      // Caso donde la cantidad de numeros no es divisible entre la
-      // cantidad de hilos
-
-      // Esta parte distribuye una cantidad de numeros que si sea
-      // divisible
-      int64_t residue =
-          (shared_data->number_counter) % shared_data->number_of_threads;
-      int64_t number_minus_residue = (shared_data->number_counter) - residue;
-      int64_t distribution =
-          number_minus_residue / shared_data->number_of_threads;
-
-      int64_t position = private_data->thread_id * distribution;
-      int64_t limit = distribution * (private_data->thread_id + 1);
-      for (int64_t y = position; y < limit; y++) {
-        int64_t number = shared_data->numbers_vec[y];
-        private_data->position = y;
-        goldbach(private_data, number);
-      }
-      // Esta aparte es para la cantidad de hilos que sobran
-      if (private_data->thread_id < residue) {
-        int64_t number =
-            shared_data
-                ->numbers_vec[private_data->thread_id + number_minus_residue];
-        private_data->position = private_data->thread_id + number_minus_residue;
-        goldbach(private_data, number);
-      }
-    }
-  } else {
-    // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
-    // de numeros y por lo tanto cada hilo agarra un numero
-    if (private_data->thread_id < shared_data->number_counter) {
-      int64_t number = shared_data->numbers_vec[private_data->thread_id];
-      private_data->position = private_data->thread_id;
-      goldbach(private_data, number);
-    }
+  for (int64_t y = new_start; y < new_end; y++) {
+    int64_t number = shared_data->numbers_vec[y];
+    private_data->position = y;
+    goldbach(private_data, number);
   }
 
   return 0;
 }
-
-/*
-int64_t distribution =
-    shared_data->number_counter / shared_data->number_of_threads;
-for (int64_t i = 0; i < shared_data->number_of_threads; i++) {
-    if (private_data->thread_id == i) {
-        int64_t position = private_data->thread_id * distribution;
-        int64_t new_distribution =
-            distribution * (private_data->thread_id + 1);
-        for (int64_t y = position; y < new_distribution; y++) {
-            int64_t number = shared_data->numbers_vec[y];
-            private_data->position = y;
-            goldbach(private_data, number);
-            printf("\n%zu hola: %zu",private_data->thread_id,number);
-        }
-
-    }
-}
-*/
 
 /**
  * @brief Crea los hilos y envia cada hilo a ejecutar el codigo correspondiente

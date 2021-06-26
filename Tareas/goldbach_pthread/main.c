@@ -19,9 +19,6 @@
 int main(int argc, char* argv[]) {
   shared_data_t* shared_data = (shared_data_t*)calloc(1, sizeof(shared_data_t));
   if (shared_data) {
-    shared_data->input = stdin;
-    shared_data->output = stdout;
-    shared_data->thread_position = 0;
     shared_data->number_counter = 0;
     shared_data->number_of_threads = sysconf(_SC_NPROCESSORS_ONLN);
     if (argc == 2) {

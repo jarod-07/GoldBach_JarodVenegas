@@ -19,28 +19,28 @@
 void print_goldbach(shared_data_t* shared_data) {
   for (int64_t i = 0; i < shared_data->number_counter; i++) {
     if (shared_data->sums_vector[i]->major_limit == 0) {
-      fprintf(shared_data->output, "NA");
+      fprintf(stdout, "NA");
     } else {
-    }
-    if (shared_data->sums_vector[i]->minor_limit == 0) {
-      if (shared_data->sums_vector[i]->number < 0) {
-        shared_data->sums_vector[i]->number =
-            shared_data->sums_vector[i]->number * -1;
-        fprintf(shared_data->output, "-%" PRIu64 " : NA\n",
-                shared_data->sums_vector[i]->number);
+      if (shared_data->sums_vector[i]->minor_limit == 0) {
+        if (shared_data->sums_vector[i]->number < 0) {
+          shared_data->sums_vector[i]->number =
+              shared_data->sums_vector[i]->number * -1;
+          fprintf(stdout, "-%" PRIu64 ": NA\n",
+                  shared_data->sums_vector[i]->number);
+        } else {
+          fprintf(stdout, "%" PRIu64 ": NA\n",
+                  shared_data->sums_vector[i]->number);
+        }
       } else {
-        fprintf(shared_data->output, "%" PRIu64 " : NA\n",
-                shared_data->sums_vector[i]->number);
-      }
-    } else {
-      if (shared_data->sums_vector[i]->number % 2 == 0) {
-        print_strong(shared_data->sums_vector[i]->number,
+        if (shared_data->sums_vector[i]->number % 2 == 0) {
+          print_strong(shared_data->sums_vector[i]->number,
+                       shared_data->sums_vector[i]->sums,
+                       shared_data->sums_vector[i]);
+        } else {
+          print_weak(shared_data->sums_vector[i]->number,
                      shared_data->sums_vector[i]->sums,
-                     shared_data->sums_vector[i], shared_data->output);
-      } else {
-        print_weak(shared_data->sums_vector[i]->number,
-                   shared_data->sums_vector[i]->sums,
-                   shared_data->sums_vector[i], shared_data->output);
+                     shared_data->sums_vector[i]);
+        }
       }
     }
   }
@@ -58,12 +58,12 @@ int input_number(shared_data_t* shared_data) {
   shared_data->numbers_vec = (int64_t*)calloc(size, sizeof(int64_t));
 
   if (shared_data->numbers_vec) {
-    while (fscanf(shared_data->input, "%" SCNu64, &number) == 1) {
+    while (fscanf(stdin, "%" SCNu64, &number) == 1) {
       if (shared_data->number_counter == size) {
         shared_data->numbers_vec = (int64_t*)realloc(
             shared_data->numbers_vec, (size * 2) * sizeof(int64_t));
         if (shared_data->numbers_vec == NULL) {
-          fprintf(shared_data->output, "Memory not reallocated\n");
+          fprintf(stdout, "Memory not reallocated\n");
           exit(0);
         } else {
           size = size * 2;
@@ -76,9 +76,11 @@ int input_number(shared_data_t* shared_data) {
 
       shared_data->number_counter++;
     }
-
+    if (shared_data->number_of_threads >= shared_data->number_counter) {
+      shared_data->number_of_threads = shared_data->number_counter;
+    }
   } else {
-    fprintf(shared_data->output, "Could not allocate the memeory.");
+    fprintf(stdout, "Could not allocate the memeory.");
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
@@ -92,7 +94,7 @@ int input_number(shared_data_t* shared_data) {
  * @param output file
  * @return void
  */
-void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
+void print_weak(int64_t num_temp, int64_t counter, Sums* sums) {
   int64_t first;
   int64_t second;
   int64_t third;
@@ -101,7 +103,7 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
     number = num_temp * -1;
   }
   if (num_temp < 0) {
-    fprintf(output,
+    fprintf(stdout,
             "-%" PRIu64
             ": "
             "%" PRIu64 " sums: ",
@@ -111,7 +113,7 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
         first = sums[i].first;
         second = sums[i].second;
         third = sums[i].third;
-        fprintf(output,
+        fprintf(stdout,
                 "%" PRIu64
                 " + "
                 "%" PRIu64
@@ -122,7 +124,7 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
         first = sums[i].first;
         second = sums[i].second;
         third = sums[i].third;
-        fprintf(output,
+        fprintf(stdout,
                 "%" PRIu64
                 " + "
                 "%" PRIu64
@@ -132,7 +134,7 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
       }
     }
   } else {
-    fprintf(output,
+    fprintf(stdout,
             "%" PRIu64
             ": "
             "%" PRIu64 " sums\n",
@@ -148,7 +150,7 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
  * @param output file
  * @return void
  */
-void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
+void print_strong(int64_t num_temp, int64_t counter, Sums* sums) {
   int64_t first;
   int64_t second;
   int64_t number = 0;
@@ -156,7 +158,7 @@ void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
     number = num_temp * -1;
   }
   if (num_temp < 0) {
-    fprintf(output,
+    fprintf(stdout,
             "-%" PRIu64
             ": "
             "%" PRIu64 " sums: ",
@@ -165,7 +167,7 @@ void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
       if (i != counter - 1) {
         first = sums[i].first;
         second = sums[i].second;
-        fprintf(output,
+        fprintf(stdout,
                 "%" PRIu64
                 " + "
                 "%" PRIu64 ", ",
@@ -173,7 +175,7 @@ void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
       } else {
         first = sums[i].first;
         second = sums[i].second;
-        fprintf(output,
+        fprintf(stdout,
                 "%" PRIu64
                 " + "
                 "%" PRIu64 "\n",
@@ -181,7 +183,7 @@ void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output) {
       }
     }
   } else {
-    fprintf(output,
+    fprintf(stdout,
             "%" PRIu64
             ": "
             "%" PRIu64 " sums\n",
