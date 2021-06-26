@@ -89,24 +89,31 @@ void weak_conjecture_def(private_data_t* private_data, int64_t number) {
   private_data->shared_data->sums_vector[private_data->position]->minor_limit =
       1;
 }
-
+/**
+ * @brief Calcula donde debe iniciar cada hilo
+ * @param thread_id
+ * @param number_of_threads
+ * @param iterations
+ * @param start siempre empiezan en 2
+ * @return int64_t
+ */
 int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
-                       int64_t num, int64_t start) {
-  int64_t normal = thread_id * ((num - start) / number_of_threads);
+                       int64_t iterations, int64_t start) {
+  int64_t normal = thread_id * ((iterations - start) / number_of_threads);
   int64_t remainder = 0;
-  if (thread_id < ((num - start) % number_of_threads)) {
+  if (thread_id < ((iterations - start) % number_of_threads)) {
     remainder = thread_id;
   } else {
-    remainder = (num - start) % number_of_threads;
+    remainder = (iterations - start) % number_of_threads;
   }
   int64_t begin = start + normal + remainder;
   return begin;
 }
 
-int64_t where_to_end(int64_t thread_id, int64_t number_of_threads, int64_t num,
-                     int64_t start) {
+int64_t where_to_end(int64_t thread_id, int64_t number_of_threads,
+                     int64_t iterations, int64_t start) {
   int64_t thread_next = thread_id + 1;
-  return where_to_begin(thread_next, number_of_threads, num, start);
+  return where_to_begin(thread_next, number_of_threads, iterations, start);
 }
 // fin de metodos privados
 

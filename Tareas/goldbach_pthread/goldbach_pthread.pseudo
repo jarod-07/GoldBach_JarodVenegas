@@ -1,11 +1,7 @@
 shared_data {
-    input
-    output
     sums_vector
     numbers_vec
     number_counter
-    thread_position
-    sem_get_position
     number_of_threads
 }
 
@@ -13,6 +9,7 @@ private_data {
     position
     shared_data
     goldbach_number
+    shared_data
 }
 
 main(argc, argv[]):
@@ -91,3 +88,6 @@ thread 1:
             private_data position := i
             goldbach(private_data, number)
         end for
+
+    // cada hilo resuelve por aparte la cantidad de sumas de cada numero
+    // que esta dentro del rango de su respectiva cantidad de numeros

@@ -13,9 +13,9 @@
 /**
  * @brief Determina si un numero es primo. Se obtuvo referencias del codigo en
  * internet.
- * @param numero entero
+ * @param number entero
  * @return devuelve un 1 si es primo y un 0 si no es primo
- * @link https://en.wikipedia.org/wiki/Primality_test
+ * @link https://en.wikipedia.org/wiki/Primality_test @endlink
  */
 int is_prime(int64_t number) {
   if (number == 2 || number == 3 || number == 5 || number == 7) {
@@ -53,10 +53,9 @@ int even_odd(int64_t number) {
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
- * @param output file
  * @return struct Sumas
  */
-Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+Sums* strong_conjecture(int64_t num_temp, int64_t* counter) {
   int64_t number = 0;
 
   if (num_temp < 0) {
@@ -79,7 +78,7 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
         size = size * 2;
         Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
         if (sums_temp == NULL) {
-          fprintf(output, "Memory not reallocated\n");
+          fprintf(stdout, "Memory not reallocated\n");
           exit(0);
         } else {
           sums = sums_temp;
@@ -95,10 +94,9 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
- * @param output file
  * @return struct Sumas
  */
-Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+Sums* weak_conjecture(int64_t num_temp, int64_t* counter) {
   int64_t number = 0;
 
   if (num_temp < 0) {
@@ -129,7 +127,7 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
                 size = size * 2;
                 Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
                 if (sums_temp == NULL) {
-                  fprintf(output, "Memory not reallocated\n");
+                  fprintf(stdout, "Memory not reallocated\n");
                   exit(0);
                 } else {
                   sums = sums_temp;

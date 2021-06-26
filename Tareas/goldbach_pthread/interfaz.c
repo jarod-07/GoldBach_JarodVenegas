@@ -76,6 +76,7 @@ int input_number(shared_data_t* shared_data) {
 
       shared_data->number_counter++;
     }
+    //para que la cantidad de hilos no sea mayor que la cantidad de numeros
     if (shared_data->number_of_threads >= shared_data->number_counter) {
       shared_data->number_of_threads = shared_data->number_counter;
     }
@@ -91,7 +92,6 @@ int input_number(shared_data_t* shared_data) {
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
  * @param sums Struct Sumas
- * @param output file
  * @return void
  */
 void print_weak(int64_t num_temp, int64_t counter, Sums* sums) {
@@ -147,7 +147,6 @@ void print_weak(int64_t num_temp, int64_t counter, Sums* sums) {
  * @param num_temp entero de 64 bits
  * @param counter entero de 64 bits
  * @param sums struct Sumas
- * @param output file
  * @return void
  */
 void print_strong(int64_t num_temp, int64_t counter, Sums* sums) {

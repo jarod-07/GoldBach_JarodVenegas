@@ -57,8 +57,7 @@ void minor_limit_def(private_data_t* private_data, int64_t number) {
  */
 void strong_conjecture_def(private_data_t* private_data, int64_t number) {
   int64_t sums_counter = 0;
-  Sums* even_sums = strong_conjecture(number, &sums_counter,
-                                      private_data->shared_data->output);
+  Sums* even_sums = strong_conjecture(number, &sums_counter);
 
   even_sums->sums = sums_counter;
   private_data->shared_data->sums_vector[private_data->position] = even_sums;
@@ -81,7 +80,7 @@ void strong_conjecture_def(private_data_t* private_data, int64_t number) {
 void weak_conjecture_def(private_data_t* private_data, int64_t number) {
   int64_t sums_counter = 0;
   Sums* odd_sums =
-      weak_conjecture(number, &sums_counter, private_data->shared_data->output);
+      weak_conjecture(number, &sums_counter);
   odd_sums->sums = sums_counter;
   private_data->shared_data->sums_vector[private_data->position] = odd_sums;
   private_data->shared_data->sums_vector[private_data->position]->number =

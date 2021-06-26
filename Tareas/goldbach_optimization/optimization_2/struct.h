@@ -1,21 +1,39 @@
 /**
  * @file goldbach_pthread.h
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Controla los hilos del programa de la conjetura Goldbach_Pthreads
+ * @brief Contiene las estructuras del programa
  * @version 1.0
  * @date 2021-05-30
  *
  * @copyright Copyright (c) 2021
  *
  */
-#ifndef GOLDBACH_PTHREAD
-#define GOLDBACH_PTHREAD
+#ifndef STRUCT_
+#define STRUCT_
 
-#include <assert.h>
+#include <inttypes.h>
+#include <math.h>
 #include <pthread.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include "goldbach_operation.h"
 #include "queue.h"
+
+/**
+ * @brief Estructura utilizada para almacenar las sumas y luego imprimirlas
+ *
+ */
+typedef struct {
+  int64_t* counter_of_sums;
+  queue_t* sums_of_thread;
+  int64_t number;
+  int64_t sums;
+  int major_limit;
+  int minor_limit;
+} Sums;
 
 /**
  * @brief Estructura utilizada para almacenar los datos compartidos entre la n
@@ -23,10 +41,9 @@
  *
  */
 typedef struct {
-  Sums** sums_vector;
+  Sums* sums_vector;
   int64_t number_counter;
-  queue_t numbers_queue;  // thread save
-  pthread_mutex_t sem_get_position;
+  int64_t* numbers_vec;
   int64_t thread_position;
   int64_t number_of_threads;
 } shared_data_t;
@@ -41,9 +58,5 @@ typedef struct {
   int64_t goldbach_number;
   shared_data_t* shared_data;
 } private_data_t;
-
-void goldbach(private_data_t* private_data, int64_t number);
-void* run_threads(void* data);
-int create_threads(shared_data_t* shared_data);
 
 #endif

@@ -3,7 +3,7 @@
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Controla los hilos del programa de la conjetura Goldbach_Pthreads
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *
@@ -15,174 +15,154 @@
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea mas grande o más pequeño del
  * limite
- * @param private_data struct que contiene los datos privados del hilo
+ * @param shared_data struct shared_data_t
+ * @param position posicion dentro del vector de Sums
  * @return void
  */
-void major_limit_def(private_data_t* private_data) {
-  Sums* invalid_cases = (Sums*)calloc(1, sizeof(Sums));
-  private_data->shared_data->sums_vector[private_data->position] =
-      invalid_cases;
-  private_data->shared_data->sums_vector[private_data->position]->major_limit =
-      0;
-  private_data->shared_data->sums_vector[private_data->position]->minor_limit =
-      1;
+void major_limit_def(shared_data_t* shared_data, int64_t position) {
+  int64_t size = shared_data->number_of_threads;
+  shared_data->sums_vector[position].counter_of_sums =
+      (int64_t*)calloc(size, sizeof(int64_t));
+  shared_data->sums_vector[position].sums_of_thread =
+      (queue_t*)calloc(size, sizeof(queue_t));
+  shared_data->sums_vector[position].sums = 0;
+  shared_data->sums_vector[position].number = 0;
+  shared_data->sums_vector[position].major_limit = 0;
+  shared_data->sums_vector[position].minor_limit = 1;
 }
 
 /**
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea un valor entre [-5 , 5]
- * @param private_data struct que contiene los datos privados del hilo
- * @param number int de 64 bits
+ * @param shared_data struct shared_data_t
+ * @param number
+ * @param position posicion dentro del vector de Sums
  * @return void
  */
-void minor_limit_def(private_data_t* private_data, int64_t number) {
-  Sums* invalid_cases = (Sums*)calloc(1, sizeof(Sums));
-  private_data->shared_data->sums_vector[private_data->position] =
-      invalid_cases;
-  private_data->shared_data->sums_vector[private_data->position]->number =
-      number;
-  private_data->shared_data->sums_vector[private_data->position]->major_limit =
-      1;
-  private_data->shared_data->sums_vector[private_data->position]->minor_limit =
-      0;
+void minor_limit_def(shared_data_t* shared_data, int64_t number,
+                     int64_t position) {
+  int64_t size = shared_data->number_of_threads;
+  shared_data->sums_vector[position].counter_of_sums =
+      (int64_t*)calloc(size, sizeof(int64_t));
+  shared_data->sums_vector[position].sums_of_thread =
+      (queue_t*)calloc(size, sizeof(queue_t));
+  shared_data->sums_vector[position].sums = 0;
+  shared_data->sums_vector[position].number = number;
+  shared_data->sums_vector[position].major_limit = 1;
+  shared_data->sums_vector[position].minor_limit = 0;
 }
 
 /**
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea par (sin importar si es negativo
  * o positivo)
- * @param private_data struct que contiene los datos privados del hilo
- * @param number int de 64 bits
+ * @param shared_data struct shared_data_t
+ * @param number
+ * @param position posicion dentro del vector de Sums
  * @return void
  */
-void strong_conjecture_def(private_data_t* private_data, int64_t number) {
-  int64_t sums_counter = 0;
-  Sums* even_sums =
-      strong_conjecture(private_data->shared_data->prime_vector, number,
-                        &sums_counter, private_data->shared_data->output);
-
-  even_sums->sums = sums_counter;
-  private_data->shared_data->sums_vector[private_data->position] = even_sums;
-  private_data->shared_data->sums_vector[private_data->position]->number =
-      number;
-  private_data->shared_data->sums_vector[private_data->position]->major_limit =
-      1;
-  private_data->shared_data->sums_vector[private_data->position]->minor_limit =
-      1;
+void strong_conjecture_def(shared_data_t* shared_data, int64_t number,
+                           int64_t position) {
+  int64_t size = shared_data->number_of_threads;
+  shared_data->sums_vector[position].counter_of_sums =
+      (int64_t*)calloc(size, sizeof(int64_t));
+  shared_data->sums_vector[position].sums_of_thread =
+      (queue_t*)calloc(size, sizeof(queue_t));
+  shared_data->sums_vector[position].sums = 0;
+  shared_data->sums_vector[position].number = number;
+  shared_data->sums_vector[position].major_limit = 1;
+  shared_data->sums_vector[position].minor_limit = 1;
 }
 
 /**
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea impar (sin importar si es
  * negativo o positivo)
- * @param private_data struct que contiene los datos privados del hilo
- * @param number int de 64 bits
+ * @param shared_data struct shared_data_t
+ * @param number
+ * @param position posicion dentro del vector de Sums
  * @return void
  */
-void weak_conjecture_def(private_data_t* private_data, int64_t number) {
-  int64_t sums_counter = 0;
-  Sums* odd_sums =
-      weak_conjecture(private_data->shared_data->prime_vector, number,
-                      &sums_counter, private_data->shared_data->output);
-  odd_sums->sums = sums_counter;
-  private_data->shared_data->sums_vector[private_data->position] = odd_sums;
-  private_data->shared_data->sums_vector[private_data->position]->number =
-      number;
-  private_data->shared_data->sums_vector[private_data->position]->major_limit =
-      1;
-  private_data->shared_data->sums_vector[private_data->position]->minor_limit =
-      1;
+void weak_conjecture_def(shared_data_t* shared_data, int64_t number,
+                         int64_t position) {
+  int64_t size = shared_data->number_of_threads;
+  shared_data->sums_vector[position].counter_of_sums =
+      (int64_t*)calloc(size, sizeof(int64_t));
+  shared_data->sums_vector[position].sums_of_thread =
+      (queue_t*)calloc(size, sizeof(queue_t));
+  shared_data->sums_vector[position].sums = 0;
+  shared_data->sums_vector[position].number = number;
+  shared_data->sums_vector[position].major_limit = 1;
+  shared_data->sums_vector[position].minor_limit = 1;
 }
+
 // fin de metodos privados
 
 /**
  * @brief Controla la entrada de datos y aplica la conjetura de goldbach
  * @param private_data struct que contiene los datos privados del hilo
- * @param number int de 64 bits
+ * @param position para saber la posicion dentro del vector de Sums
  * @return void
  */
-void goldbach(private_data_t* private_data, int64_t number) {
-  if (number > ((int64_t)pow(2, 63) - 1) ||
-      number < -((int64_t)pow(2, 63) - 1)) {
-    major_limit_def(private_data);
+void goldbach(private_data_t* private_data, int64_t position) {
+  if (private_data->goldbach_number > ((int64_t)pow(2, 63) - 1) ||
+      private_data->goldbach_number < -((int64_t)pow(2, 63) - 1)) {
+    // no hace nada
   } else {
-    if ((number <= 5 && number >= -5)) {
-      minor_limit_def(private_data, number);
+    if ((private_data->goldbach_number <= 5 &&
+         private_data->goldbach_number >= -5)) {
+      // no hace nada
     } else {
-      if (even_odd(number) == 1) {
-        strong_conjecture_def(private_data, number);
+      if (even_odd(private_data->goldbach_number) == 1) {
+        strong_conjecture(private_data, position);
       } else {
-        weak_conjecture_def(private_data, number);
+        weak_conjecture(private_data, position);
       }
     }
   }
 }
 
 /**
- * @brief Funcion para controlar los hilos: reparte el trabajo equitativemente
- * entre los hilos
+ * @brief Funcion para controlar los hilos todos los hilos trabajan el mismo
+ * numero
  * @param data void que recibe un private_data
  * @return void
  */
 void* run_threads(void* data) {
   private_data_t* private_data = (private_data_t*)data;
   shared_data_t* shared_data = private_data->shared_data;
-
-  // Caso donde el numero de hilos es menor a la cantidad de numeros
-  if ((shared_data->number_of_threads - 1) < shared_data->number_counter) {
-    // Caso ideal donde la cantidad de numerso es divisible entre la
-    // cantidad de hilos
-    if ((shared_data->number_counter % shared_data->number_of_threads) == 0) {
-      int64_t distribution =
-          shared_data->number_counter / shared_data->number_of_threads;
-
-      int64_t position = private_data->thread_id * distribution;
-      int64_t limit = distribution * (private_data->thread_id + 1);
-      for (int64_t y = position; y < limit; y++) {
-        int64_t number = shared_data->numbers_vec[y];
-        private_data->position = y;
-        goldbach(private_data, number);
-      }
-
-    } else {
-      // Caso donde la cantidad de numeros no es divisible entre la
-      // cantidad de hilos
-
-      // Esta parte distribuye una cantidad de numeros que si sea
-      // divisible
-      int64_t residue =
-          (shared_data->number_counter) % shared_data->number_of_threads;
-      int64_t number_minus_residue = (shared_data->number_counter) - residue;
-      int64_t distribution =
-          number_minus_residue / shared_data->number_of_threads;
-
-      int64_t position = private_data->thread_id * distribution;
-      int64_t limit = distribution * (private_data->thread_id + 1);
-      for (int64_t y = position; y < limit; y++) {
-        int64_t number = shared_data->numbers_vec[y];
-        private_data->position = y;
-        goldbach(private_data, number);
-      }
-      // Esta aparte es para la cantidad de hilos que sobran
-      if (private_data->thread_id < residue) {
-        int64_t number =
-            shared_data
-                ->numbers_vec[private_data->thread_id + number_minus_residue];
-        private_data->position = private_data->thread_id + number_minus_residue;
-        goldbach(private_data, number);
-      }
-    }
-  } else {
-    // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
-    // de numeros y por lo tanto cada hilo agarra un numero
-    if (private_data->thread_id < shared_data->number_counter) {
-      int64_t number = shared_data->numbers_vec[private_data->thread_id];
-      private_data->position = private_data->thread_id;
-      goldbach(private_data, number);
-    }
+  for (int i = 0; i < shared_data->number_counter; i++) {
+    private_data->goldbach_number = shared_data->numbers_vec[i];
+    goldbach(private_data, i);
   }
 
   return 0;
+}
+/**
+ * @brief Para llenar el vector de las estructuras de Sums con los datos
+ * correspondientes
+ * @param shared_data struct shared_data_t
+ * @return void
+ */
+void complete_structure(shared_data_t* shared_data) {
+  int64_t limit = shared_data->number_counter;
+  for (int64_t i = 0; i < limit; i++) {
+    if (shared_data->numbers_vec[i] > ((int64_t)pow(2, 63) - 1) ||
+        shared_data->numbers_vec[i] < -((int64_t)pow(2, 63) - 1)) {
+      major_limit_def(shared_data, i);
+    } else {
+      if ((shared_data->numbers_vec[i] <= 5 &&
+           shared_data->numbers_vec[i] >= -5)) {
+        minor_limit_def(shared_data, shared_data->numbers_vec[i], i);
+      } else {
+        if (even_odd(shared_data->numbers_vec[i]) == 1) {
+          strong_conjecture_def(shared_data, shared_data->numbers_vec[i], i);
+        } else {
+          weak_conjecture_def(shared_data, shared_data->numbers_vec[i], i);
+        }
+      }
+    }
+  }
 }
 
 /**

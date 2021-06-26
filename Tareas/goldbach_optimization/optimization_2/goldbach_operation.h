@@ -11,32 +11,11 @@
 #ifndef GOLDBACH_OPERATION
 #define GOLDBACH_OPERATION
 
-#include <inttypes.h>
-#include <math.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-/**
- * @brief Estructura utilizada para almacenar las sumas y luego imprimirlas
- *
- */
-typedef struct {
-  int64_t first;
-  int64_t second;
-  int64_t third;
-  int64_t number;
-  int64_t sums;
-  int major_limit;
-  int minor_limit;
-} Sums;
+#include "struct.h"
 
 int is_prime(int64_t number);
 int even_odd(int64_t number);
-Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output);
-Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output);
+void strong_conjecture(private_data_t* private_data, int64_t position);
+void weak_conjecture(private_data_t* private_data, int64_t position);
 
 #endif

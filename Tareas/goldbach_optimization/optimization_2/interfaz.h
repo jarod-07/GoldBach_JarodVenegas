@@ -17,7 +17,7 @@
 
 void print_goldbach(shared_data_t* shared_data);
 int input_number(shared_data_t* shared_data);
-void print_weak(int64_t num_temp, int64_t counter, Sums* sums, FILE* output);
-void print_strong(int64_t num_temp, int64_t counter, Sums* sums, FILE* output);
+void print_weak(shared_data_t* shared_data, int64_t position);
+void print_strong(shared_data_t* shared_data, int64_t position);
 
 #endif

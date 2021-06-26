@@ -1,6 +1,4 @@
 shared_data {
-    input
-    output
     sums_vector
     numbers_vec
     number_counter
@@ -39,72 +37,15 @@ main(argc, argv[]):
     end if
 
 run_thread:
+  while ( !(queue_is_empty(&shared_data->numbers_queue)) )
+    wait(&shared_data->sem_get_position);
+    queue_dequeue( numbers_queue, goldbach_number);
+    private_data position = shared_data thread_position;
+    shared_data thread_position++;
+    signal(&shared_data->sem_get_position);
+    goldbach(private_data, private_data goldbach_number);
+  end while
 
-    // Caso donde el numero de hilos es menor a la cantidad de numeros
-    if (shared_data number_of_threads - 1) < shared_data number_counter
-
-        if shared_data number_counter % shared_data number_of_threads) == 0
-
-            //para distribuir el trabajo equitativamente
-            distribution := shared_data number_counter / shared_data number_of_threads
-
-            //para definir en que lugar del array empieza cada hilo
-            position := private_data thread_id * distribution
-
-            //para definir en que lugar del array termina cada hilo
-            limit := distribution * (private_data->thread_id + 1)
-
-            for position to limit do 
-                number := shared_data numbers_vec[position]
-                private_data position := position
-                goldbach(private_data, number)
-            
-        end if
-
-        else
-            // Caso donde la cantidad de numeros no es divisible entre la
-            // cantidad de hilos
-
-            // Esta parte distribuye una cantidad de numeros que si sea
-            // divisible
-
-            //contener el residuo de la division entra la cantidad de numeros y los hilos
-            residue := (shared_data->number_counter) % shared_data->number_of_threads
-
-            //Es el numero menos el residuo de la multiplicacion
-            number_minus_residue := (shared_data number_counter) - residue
-
-            //para distribuir el trabajo equitativamente
-            distribution = number_minus_residue / shared_data number_of_threads
-
-            //para definir en que lugar del array empieza cada hilo
-            position := private_data thread_id * distribution
-
-            //para definir en que lugar del array termina cada hilo
-            limit := distribution * (private_data->thread_id + 1)
-
-            for position to limit do 
-                number := shared_data numbers_vec[position]
-                private_data position := position
-                goldbach(private_data, number)
-
-            // Esta aparte es para distribuir la cantidad de numeros que sobran
-            if private_data->thread_id < residue
-                number := shared_data numbers_vec[private_data thread_id + number_minus_residue]
-                private_data->position := private_data thread_id + number_minus_residue
-                goldbach(private_data, number)
-        end else
-
-    end if
-        
-    else
-        // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
-        // de numeros y por lo tanto cada hilo agarra un numero
-        if private_data thread_id < shared_data->number_counter
-            number := shared_data->numbers_vec[private_data thread_id]
-            private_data->position := private_data thread_id
-            goldbach(private_data, number)
-    end else
  
 input_number:
     number := 0
@@ -127,85 +68,16 @@ input_number:
 
 -----------Ejemplos--------------
 
-thread 1:
+threads:
+    //aqui cada hilo agarra cualquier numero que pueda y hace goldbach
     run_thread:
+        while ( !(queue_is_empty(&shared_data->numbers_queue)) )
+            wait(&shared_data->sem_get_position);
+            queue_dequeue(numbers_queue, goldbach_number);
+            private_data position = shared_data thread_position;
+            shared_data thread_position++;
+            signal(&shared_data->sem_get_position);
+            goldbach(private_data, goldbach_number);
+    end while
 
-    // Caso donde el numero de hilos es menor a la cantidad de numeros
-    if (shared_data number_of_threads - 1) < shared_data number_counter
-
-        //caso ideal donde la cantidad de numeros es divisible entre la cantidad de hilos
-        if shared_data number_counter % shared_data number_of_threads) == 0
-
-            //distribuye el trabajo equitativamente
-            //hace goldbach
-            
-        end if
-
-        else
-            // Caso donde la cantidad de numeros no es divisible entre la
-            // cantidad de hilos
-
-            // Esta parte distribuye una cantidad de numeros que si sea
-            // divisible
-
-            //distribuye el trabajo equitativamente
-            //hace goldbach
-
-            // Esta aparte es para distribuir la cantidad de numeros que sobran
-            if private_data->thread_id < residue
-                //distribuye los numeros a cada hilo
-                //hace goldbach
-        end else
-
-    end if
-        
-    else
-        // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
-        // de numeros y por lo tanto cada hilo agarra un numero
-        if private_data thread_id < shared_data->number_counter
-            //distribuye un numero para cada hilo
-            //hace goldbach
-    end else
-
-thread 2:
-    run_thread:
-
-    // Caso donde el numero de hilos es menor a la cantidad de numeros
-    if (shared_data number_of_threads - 1) < shared_data number_counter
-
-        //caso ideal donde la cantidad de numeros es divisible entre la cantidad de hilos
-        if shared_data number_counter % shared_data number_of_threads) == 0
-
-            //distribuye el trabajo equitativamente
-            //hace goldbach
-            
-        end if
-
-        else
-            // Caso donde la cantidad de numeros no es divisible entre la
-            // cantidad de hilos
-
-            // Esta parte distribuye una cantidad de numeros que si sea
-            // divisible
-
-            //distribuye el trabajo equitativamente
-            //hace goldbach
-
-            // Esta aparte es para distribuir la cantidad de numeros que sobran
-            if private_data->thread_id < residue
-                //distribuye los numeros a cada hilo
-                //hace goldbach
-        end else
-
-    end if
-        
-    else
-        // Este caso es para cuando la cantidad de hilos es mayor a la cantidad
-        // de numeros y por lo tanto cada hilo agarra un numero
-        if private_data thread_id < shared_data->number_counter
-            //distribuye un numero para cada hilo
-            //hace goldbach
-    end else
-
-    
 

@@ -15,33 +15,8 @@
 
 #include "goldbach_operation.h"
 
-/**
- * @brief Estructura utilizada para almacenar los datos compartidos entre la n
- * cantidad de hilos
- *
- */
-typedef struct {
-  FILE* input;
-  FILE* output;
-  Sums** sums_vector;
-  int64_t number_counter;
-  int64_t* numbers_vec;
-  int64_t thread_position;
-  int64_t number_of_threads;
-} shared_data_t;
-
-/**
- * @brief Estructura utilizada para alamcenar los datos privados de los hilos
- *
- */
-typedef struct {
-  int64_t position;
-  int64_t thread_id;
-  int64_t goldbach_number;
-  shared_data_t* shared_data;
-} private_data_t;
-
 void goldbach(private_data_t* private_data, int64_t number);
+void complete_structure(shared_data_t* shared_data);
 void* run_threads(void* data);
 int create_threads(shared_data_t* shared_data);
 

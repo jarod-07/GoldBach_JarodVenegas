@@ -4,7 +4,7 @@
  * @brief Controla el programa(crea los hilos e inicializa el shared_data,
  * imprime las sumas y libera la memoria)
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *

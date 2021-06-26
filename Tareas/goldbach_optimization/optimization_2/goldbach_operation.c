@@ -10,12 +10,48 @@
  */
 #include "goldbach_operation.h"
 
+// Metodos privados
+/**
+ * @brief Determina donde empieza cada hilo
+ * @param thread_id
+ * @param number_of_threads
+ * @param iterations cantidad de iteraciones
+ * @param start empieza en 2
+ * @return int64_t
+ */
+int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
+                       int64_t iterations, int64_t start) {
+  int64_t normal = thread_id * ((iterations - start) / number_of_threads);
+  int64_t remainder = 0;
+  if (thread_id < ((iterations - start) % number_of_threads)) {
+    remainder = thread_id;
+  } else {
+    remainder = (iterations - start) % number_of_threads;
+  }
+  int64_t begin = start + normal + remainder;
+  return begin;
+}
+
+/**
+ * @brief Determina donde termina cada hilo
+ * @param thread_id
+ * @param number_of_threads
+ * @param iterations cantidad de iteraciones
+ * @param start empieza en 2
+ * @return int64_t
+ */
+int64_t where_to_end(int64_t thread_id, int64_t number_of_threads,
+                     int64_t iterations, int64_t start) {
+  int64_t thread_next = thread_id + 1;
+  return where_to_begin(thread_next, number_of_threads, iterations, start);
+}
+// Fin de metodos privados
 /**
  * @brief Determina si un numero es primo. Se obtuvo referencias del codigo en
  * internet.
- * @param numero entero
+ * @param number entero
  * @return devuelve un 1 si es primo y un 0 si no es primo
- * @link https://en.wikipedia.org/wiki/Primality_test
+ * @link https://en.wikipedia.org/wiki/Primality_test @endlink
  */
 int is_prime(int64_t number) {
   if (number == 2 || number == 3 || number == 5 || number == 7) {
@@ -51,12 +87,15 @@ int even_odd(int64_t number) {
 
 /**
  * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
- * @param num_temp entero de 64 bits
- * @param counter entero de 64 bits
- * @param output file
+ * @param private_data struct private_data_t
+ * @param position posicion dentro del vector de Sums
  * @return struct Sumas
  */
-Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+void strong_conjecture(private_data_t* private_data, int64_t position) {
+  int64_t number_of_threads = private_data->shared_data->number_of_threads;
+  int64_t num_temp = private_data->goldbach_number;
+  int64_t thread_id = private_data->thread_id;
+  int64_t counter = 0;
   int64_t number = 0;
 
   if (num_temp < 0) {
@@ -64,41 +103,47 @@ Sums* strong_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
   } else {
     number = num_temp;
   }
-  int size = 10;
 
-  Sums* sums = (Sums*)calloc(size, sizeof(Sums));
-  int64_t pivot = 2;
-  for (int64_t i = number - pivot; i > 2; i--) {
-    if ((is_prime(pivot) == 1) && (is_prime(i) == 1) && pivot <= i) {
-      if (num_temp < 0) {
-        sums[*counter].first = (int64_t)pivot;
-        sums[*counter].second = (int64_t)i;
-      }
-      *counter = *counter + 1;
-      if (*counter == size && num_temp < 0) {
-        size = size * 2;
-        Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
-        if (sums_temp == NULL) {
-          fprintf(output, "Memory not reallocated\n");
-          exit(0);
-        } else {
-          sums = sums_temp;
+  int64_t iterations = (number / 2) + 1;
+  int64_t start = where_to_begin(thread_id, number_of_threads, iterations, 2);
+  int64_t end = where_to_end(thread_id, number_of_threads, iterations, 2);
+
+  queue_init(&private_data->shared_data->sums_vector[position]
+                  .sums_of_thread[thread_id]);
+
+  for (int64_t x = start; x < end; x++) {
+    if ((is_prime(x) == 1)) {
+      int64_t posible_number = number - x;
+      if (is_prime(posible_number) == 1 && (x + posible_number) == number) {
+        if (posible_number > 2 && posible_number >= x) {
+          if (num_temp < 0) {
+            queue_enqueue(&private_data->shared_data->sums_vector[position]
+                               .sums_of_thread[thread_id],
+                          (int64_t)x);
+            queue_enqueue(&private_data->shared_data->sums_vector[position]
+                               .sums_of_thread[thread_id],
+                          (int64_t)posible_number);
+          }
+          counter = counter + 1;
         }
       }
     }
-    pivot++;
   }
-  return sums;
+  private_data->shared_data->sums_vector[position].counter_of_sums[thread_id] =
+      counter;
 }
 
 /**
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
- * @param num_temp entero de 64 bits
- * @param counter entero de 64 bits
- * @param output file
+ * @param private_data struct private_data_t
+ * @param position posicion dentro del vector de Sums
  * @return struct Sumas
  */
-Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
+void weak_conjecture(private_data_t* private_data, int64_t position) {
+  int64_t number_of_threads = private_data->shared_data->number_of_threads;
+  int64_t num_temp = private_data->goldbach_number;
+  int64_t thread_id = private_data->thread_id;
+  int64_t counter = 0;
   int64_t number = 0;
 
   if (num_temp < 0) {
@@ -107,11 +152,14 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
     number = num_temp;
   }
 
-  int size = 10;
+  int64_t iterations = number / 2;
+  int64_t start = where_to_begin(thread_id, number_of_threads, iterations, 2);
+  int64_t end = where_to_end(thread_id, number_of_threads, iterations, 2);
 
-  Sums* sums = (Sums*)calloc(size, sizeof(Sums));
+  queue_init(&private_data->shared_data->sums_vector[position]
+                  .sums_of_thread[thread_id]);
 
-  for (int64_t x = 2; x < number; x++) {
+  for (int64_t x = start; x < end; x++) {
     if (is_prime(x) == 1) {
       for (int64_t y = x; y < number; y++) {
         if (is_prime(y) == 1) {
@@ -120,26 +168,23 @@ Sums* weak_conjecture(int64_t num_temp, int64_t* counter, FILE* output) {
               is_prime(posible_number) == 1) {
             if (posible_number > 2 && posible_number >= y) {
               if (num_temp < 0) {
-                sums[*counter].first = (int64_t)x;
-                sums[*counter].second = (int64_t)y;
-                sums[*counter].third = (int64_t)posible_number;
+                queue_enqueue(&private_data->shared_data->sums_vector[position]
+                                   .sums_of_thread[thread_id],
+                              (int64_t)x);
+                queue_enqueue(&private_data->shared_data->sums_vector[position]
+                                   .sums_of_thread[thread_id],
+                              (int64_t)y);
+                queue_enqueue(&private_data->shared_data->sums_vector[position]
+                                   .sums_of_thread[thread_id],
+                              (int64_t)posible_number);
               }
-              *counter = *counter + 1;
-              if (*counter == size && num_temp < 0) {
-                size = size * 2;
-                Sums* sums_temp = realloc(sums, (size * 2) * sizeof(Sums));
-                if (sums_temp == NULL) {
-                  fprintf(output, "Memory not reallocated\n");
-                  exit(0);
-                } else {
-                  sums = sums_temp;
-                }
-              }
+              counter = counter + 1;
             }
           }
         }
       }
     }
   }
-  return sums;
+  private_data->shared_data->sums_vector[position].counter_of_sums[thread_id] =
+      counter;
 }

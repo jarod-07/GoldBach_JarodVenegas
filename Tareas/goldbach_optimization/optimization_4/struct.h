@@ -1,9 +1,9 @@
 /**
- * @file goldbach_pthread.h
+ * @file struct.h
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Controla las operaciones para calcular la conjetura de Goldbach
+ * @brief Continene las estrcuturas
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *
@@ -20,14 +20,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "queue.h"
+
 /**
  * @brief Estructura utilizada para almacenar las sumas y luego imprimirlas
  *
  */
 typedef struct {
-  int64_t first;
-  int64_t second;
-  int64_t third;
+  int64_t* counter_of_sums;
+  queue_t* sums_of_thread;
   int64_t number;
   int64_t sums;
   int major_limit;
@@ -40,13 +41,10 @@ typedef struct {
  *
  */
 typedef struct {
-  FILE* input;
-  FILE* output;
-  Sums** sums_vector;
-  int64_t number_counter;
+  Sums* sums_vector;
   int64_t* numbers_vec;
   int64_t* prime_vector;
-  int64_t thread_position;
+  int64_t number_counter;
   int64_t number_of_threads;
 } shared_data_t;
 
