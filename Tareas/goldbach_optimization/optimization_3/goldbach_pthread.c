@@ -57,7 +57,7 @@ void minor_limit_def(shared_data_t* shared_data, int64_t number,
  * estructura Sums en caso de que el numero sea par (sin importar si es negativo
  * o positivo)
  * @param shared_data struct shared_data_t
- * @param number
+ * @param number 
  * @param position posicion dentro del vector de Sums
  * @return void
  */
@@ -79,7 +79,7 @@ void strong_conjecture_def(shared_data_t* shared_data, int64_t number,
  * estructura Sums en caso de que el numero sea impar (sin importar si es
  * negativo o positivo)
  * @param shared_data struct shared_data_t
- * @param number
+ * @param number 
  * @param position posicion dentro del vector de Sums
  * @return void
  */

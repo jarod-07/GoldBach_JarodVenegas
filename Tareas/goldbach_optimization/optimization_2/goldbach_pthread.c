@@ -3,7 +3,7 @@
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Controla los hilos del programa de la conjetura Goldbach_Pthreads
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *
@@ -35,7 +35,7 @@ void major_limit_def(shared_data_t* shared_data, int64_t position) {
  * @brief metodo necesario para asignar los valores adecuados dentro de la
  * estructura Sums en caso de que el numero sea un valor entre [-5 , 5]
  * @param shared_data struct shared_data_t
- * @param number 
+ * @param number
  * @param position posicion dentro del vector de Sums
  * @return void
  */
@@ -57,7 +57,7 @@ void minor_limit_def(shared_data_t* shared_data, int64_t number,
  * estructura Sums en caso de que el numero sea par (sin importar si es negativo
  * o positivo)
  * @param shared_data struct shared_data_t
- * @param number 
+ * @param number
  * @param position posicion dentro del vector de Sums
  * @return void
  */
@@ -79,7 +79,7 @@ void strong_conjecture_def(shared_data_t* shared_data, int64_t number,
  * estructura Sums en caso de que el numero sea impar (sin importar si es
  * negativo o positivo)
  * @param shared_data struct shared_data_t
- * @param number 
+ * @param number
  * @param position posicion dentro del vector de Sums
  * @return void
  */
@@ -101,7 +101,7 @@ void weak_conjecture_def(shared_data_t* shared_data, int64_t number,
 /**
  * @brief Controla la entrada de datos y aplica la conjetura de goldbach
  * @param private_data struct que contiene los datos privados del hilo
- * @param position posicion dentro del vector de Sums
+ * @param position para saber la posicion dentro del vector de Sums
  * @return void
  */
 void goldbach(private_data_t* private_data, int64_t position) {
@@ -123,7 +123,8 @@ void goldbach(private_data_t* private_data, int64_t position) {
 }
 
 /**
- * @brief Funcion para controlar los hilos. Cada hilo agarra el mismo numero
+ * @brief Funcion para controlar los hilos todos los hilos trabajan el mismo
+ * numero
  * @param data void que recibe un private_data
  * @return void
  */
@@ -137,9 +138,8 @@ void* run_threads(void* data) {
 
   return 0;
 }
-
 /**
- * @brief Para llenar el vector de las estrcututas de Sums con los datos
+ * @brief Para llenar el vector de las estructuras de Sums con los datos
  * correspondientes
  * @param shared_data struct shared_data_t
  * @return void

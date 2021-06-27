@@ -3,7 +3,7 @@
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Controla las operaciones para calcular la conjetura de Goldbach
  * @version 1.0
- * @date 2021-06-27
+ * @date 2021-05-30
  *
  * @copyright Copyright (c) 2021
  *

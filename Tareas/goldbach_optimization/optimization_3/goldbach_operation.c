@@ -17,7 +17,7 @@
  * @param number_of_threads cantidad de hilos
  * @param iterations cantidad de iteraciones
  * @param start donde empieza el hilo
- * @return int64_t
+ * @return int64_t 
  */
 int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
                        int64_t iterations, int64_t start) {
@@ -38,10 +38,10 @@ int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
  * @param number_of_threads cantidad de hilos
  * @param iterations cantidad de iteraciones
  * @param start donde empieza el hilo
- * @return int64_t
+ * @return int64_t 
  */
-int64_t where_to_end(int64_t thread_id, int64_t number_of_threads,
-                     int64_t iterations, int64_t start) {
+int64_t where_to_end(int64_t thread_id, int64_t number_of_threads, int64_t iterations,
+                     int64_t start) {
   int64_t thread_next = thread_id + 1;
   return where_to_begin(thread_next, number_of_threads, iterations, start);
 }
@@ -163,7 +163,7 @@ void weak_conjecture(private_data_t* private_data, int64_t position) {
 
   for (int64_t x = start; x < end; x++) {
     if (primer_vector[x] == 1) {
-      for (int64_t y = x; y < number; y++) {
+      for (int64_t y = x; y < number / 2; y++) {
         if (primer_vector[y] == 1) {
           int64_t posible_number = number - (x + y);
           if (x + y + posible_number == number &&

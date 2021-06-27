@@ -95,7 +95,7 @@ int input_number(shared_data_t* shared_data, int64_t* big_num) {
       if (number_temp < 0) {
         number_temp = number_temp * -1;
       }
-      // para guardar el numero mas grande ingresado
+      // para guardar el numero mas grnade ingresado
       if (number_temp > *big_num) {
         *big_num = number_temp;
       }

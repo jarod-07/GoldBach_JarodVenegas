@@ -12,13 +12,12 @@ bool queue_is_empty_unsafe(const queue_t* queue);
 /**
  * @brief Inicializa la cola
  * @param queue struct queue_t
- * @return int inicializa el semaforo
+ * @return void
  */
-int queue_init(queue_t* queue) {
+void queue_init(queue_t* queue) {
   assert(queue);
   queue->head = NULL;
   queue->tail = NULL;
-  return pthread_mutex_init(&queue->can_access_queue, NULL);
 }
 
 /**
@@ -26,9 +25,8 @@ int queue_init(queue_t* queue) {
  * @param queue struct queue_t
  * @return int destruye el semaforo
  */
-int queue_destroy(queue_t* queue) {
+void queue_destroy(queue_t* queue) {
   queue_clear(queue);
-  return pthread_mutex_destroy(&queue->can_access_queue);
 }
 
 /**
@@ -49,9 +47,7 @@ bool queue_is_empty_unsafe(const queue_t* queue) {
  */
 bool queue_is_empty(queue_t* queue) {
   assert(queue);
-  pthread_mutex_lock(&queue->can_access_queue);
   bool result = queue_is_empty_unsafe(queue);
-  pthread_mutex_unlock(&queue->can_access_queue);
   return result;
 }
 
@@ -71,13 +67,11 @@ int64_t queue_enqueue(queue_t* queue, const int64_t data) {
   if (new_node) {
     new_node->data = data;
 
-    pthread_mutex_lock(&queue->can_access_queue);
     if (queue->tail) {
       queue->tail = queue->tail->next = new_node;
     } else {
       queue->head = queue->tail = new_node;
     }
-    pthread_mutex_unlock(&queue->can_access_queue);
   } else {
     error = EXIT_FAILURE;
   }
@@ -95,7 +89,6 @@ int64_t queue_dequeue(queue_t* queue, int64_t* data) {
   assert(queue);
   int error = 0;
 
-  pthread_mutex_lock(&queue->can_access_queue);
   if (!queue_is_empty_unsafe(queue)) {
     if (data) {
       *data = queue->head->data;
@@ -104,7 +97,6 @@ int64_t queue_dequeue(queue_t* queue, int64_t* data) {
   } else {
     error = EXIT_FAILURE;
   }
-  pthread_mutex_unlock(&queue->can_access_queue);
 
   return error;
 }
@@ -132,9 +124,7 @@ void queue_remove_first_unsafe(queue_t* queue) {
  */
 void queue_clear(queue_t* queue) {
   assert(queue);
-  pthread_mutex_lock(&queue->can_access_queue);
   while (!queue_is_empty_unsafe(queue)) {
     queue_remove_first_unsafe(queue);
   }
-  pthread_mutex_unlock(&queue->can_access_queue);
 }

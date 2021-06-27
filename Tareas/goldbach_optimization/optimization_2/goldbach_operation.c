@@ -3,7 +3,7 @@
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
  * @brief Controla las operaciones para calcular la conjetura de Goldbach
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *
@@ -12,11 +12,11 @@
 
 // Metodos privados
 /**
- * @brief Determina donde empieza cada hilo
- * @param thread_id
- * @param number_of_threads
+ * @brief Calcula donde empiezan las iteraciones de un hilo
+ * @param thread_id id del thread
+ * @param number_of_threads cantidad de hilos
  * @param iterations cantidad de iteraciones
- * @param start empieza en 2
+ * @param start donde empieza el hilo
  * @return int64_t
  */
 int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
@@ -33,11 +33,11 @@ int64_t where_to_begin(int64_t thread_id, int64_t number_of_threads,
 }
 
 /**
- * @brief Determina donde termina cada hilo
- * @param thread_id
- * @param number_of_threads
+ * @brief Calcula donde terminan las iteraciones de un hilo
+ * @param thread_id id del thread
+ * @param number_of_threads cantidad de hilos
  * @param iterations cantidad de iteraciones
- * @param start empieza en 2
+ * @param start donde empieza el hilo
  * @return int64_t
  */
 int64_t where_to_end(int64_t thread_id, int64_t number_of_threads,
@@ -86,13 +86,14 @@ int even_odd(int64_t number) {
 }
 
 /**
- * @brief Para todo numero impar utiliza la conjetura fuerte de goldbach
+ * @brief Para todo numero par utiliza la conjetura fuerte de goldbach
  * @param private_data struct private_data_t
- * @param position posicion dentro del vector de Sums
- * @return struct Sumas
+ * @param position posicion dentro del vector de sumas
+ * @return void
  */
 void strong_conjecture(private_data_t* private_data, int64_t position) {
   int64_t number_of_threads = private_data->shared_data->number_of_threads;
+  int64_t* primer_vector = private_data->shared_data->prime_vector;
   int64_t num_temp = private_data->goldbach_number;
   int64_t thread_id = private_data->thread_id;
   int64_t counter = 0;
@@ -112,7 +113,7 @@ void strong_conjecture(private_data_t* private_data, int64_t position) {
                   .sums_of_thread[thread_id]);
 
   for (int64_t x = start; x < end; x++) {
-    if ((is_prime(x) == 1)) {
+    if ((primer_vector[x] == 1)) {
       int64_t posible_number = number - x;
       if (is_prime(posible_number) == 1 && (x + posible_number) == number) {
         if (posible_number > 2 && posible_number >= x) {
@@ -136,11 +137,12 @@ void strong_conjecture(private_data_t* private_data, int64_t position) {
 /**
  * @brief Para todo numero impar utiliza la conjetura debil de goldbach
  * @param private_data struct private_data_t
- * @param position posicion dentro del vector de Sums
- * @return struct Sumas
+ * @param position posicion dentro del vector de sumas
+ * @return void
  */
 void weak_conjecture(private_data_t* private_data, int64_t position) {
   int64_t number_of_threads = private_data->shared_data->number_of_threads;
+  int64_t* primer_vector = private_data->shared_data->prime_vector;
   int64_t num_temp = private_data->goldbach_number;
   int64_t thread_id = private_data->thread_id;
   int64_t counter = 0;
@@ -160,12 +162,12 @@ void weak_conjecture(private_data_t* private_data, int64_t position) {
                   .sums_of_thread[thread_id]);
 
   for (int64_t x = start; x < end; x++) {
-    if (is_prime(x) == 1) {
+    if (primer_vector[x] == 1) {
       for (int64_t y = x; y < number; y++) {
-        if (is_prime(y) == 1) {
+        if (primer_vector[y] == 1) {
           int64_t posible_number = number - (x + y);
           if (x + y + posible_number == number &&
-              is_prime(posible_number) == 1) {
+              primer_vector[posible_number] == 1) {
             if (posible_number > 2 && posible_number >= y) {
               if (num_temp < 0) {
                 queue_enqueue(&private_data->shared_data->sums_vector[position]

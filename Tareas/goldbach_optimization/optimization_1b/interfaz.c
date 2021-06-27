@@ -4,46 +4,13 @@
  * @brief Interfaz del programa de la conjetura de Goldbach_Pthreads que se
  * encarga de los metodos de impresion y entrada de datos
  * @version 1.0
- * @date 2021-06-27
+ * @date 2021-05-30
  *
  * @copyright Copyright (c) 2021
  *
  */
 #include "interfaz.h"
 
-/**
- * @brief Crea un vector de primos con una relacion de 1:1
- * @param shared_data strcut shared_data_t
- * @param size el tamaño del vector de primos
- */
-void create_prime_vector(shared_data_t* shared_data, int64_t size) {
-  shared_data->prime_vector = (int64_t*)calloc(size, sizeof(int64_t));
-  // Se crea un vector con el numero mas grande de los numeros ingresados
-  shared_data->prime_vector[2] = 1;
-  // Por si el numero es impar
-  if (even_odd(size) == 0) {
-    size = size - 1;
-  }
-
-  for (int64_t i = 1; i <= size / 2; i = i + 3) {
-    // Aqui se revisan solo los numeros impares que son los posibles primos
-
-    // Revisa el impar mas proximo
-    if (is_prime((i * 2) + 1)) {
-      shared_data->prime_vector[(i * 2) + 1] = 1;
-    }
-
-    // Revisa el siguiente impar del anterior
-    if (is_prime((i * 2) + 3)) {
-      shared_data->prime_vector[(i * 2) + 3] = 1;
-    }
-
-    // Revisa el siguiente impar del anterior
-    if (is_prime((i * 2) + 5)) {
-      shared_data->prime_vector[(i * 2) + 5] = 1;
-    }
-  }
-}
 /**
  * @brief Controla la impresion de todas las sumas de cada numero
  * @param shared_data struct shared_data
@@ -76,29 +43,18 @@ void print_goldbach(shared_data_t* shared_data) {
 }
 
 /**
- * @brief Controla el ingreso de datos y los coloca en un vector de numeros
- * @param shared_data struct shared_data_t
- * @param big_num el numero mas grande de los ingresados
- * @return int
+ * @brief Controla el ingreso de datos, los almacena en una cola y asigna una
+ * posicion a cada hilo
+ * @param shared_data struct shared_data
  */
-int input_number(shared_data_t* shared_data, int64_t* big_num) {
+int input_number(shared_data_t* shared_data) {
   int64_t number = 0;
-  int64_t number_temp = 0;
-  int size = 20;
+  int size = 10;
 
   shared_data->numbers_vec = (int64_t*)calloc(size, sizeof(int64_t));
 
   if (shared_data->numbers_vec) {
     while (fscanf(stdin, "%" SCNu64, &number) == 1) {
-      number_temp = number;
-      // por si el numero es negativo
-      if (number_temp < 0) {
-        number_temp = number_temp * -1;
-      }
-      // para guardar el numero mas grnade ingresado
-      if (number_temp > *big_num) {
-        *big_num = number_temp;
-      }
       if (shared_data->number_counter == size) {
         shared_data->numbers_vec = (int64_t*)realloc(
             shared_data->numbers_vec, (size * 2) * sizeof(int64_t));
@@ -127,7 +83,8 @@ int input_number(shared_data_t* shared_data, int64_t* big_num) {
 /**
  * @brief Imprime las sumas de la conjetura debil
  * @param shared_data struct shared_data_t
- * @param position para saber la posicion dentro edl vector de Sums
+ * @param position posicion entro del vector de Sums
+ * @return void
  */
 void print_weak(shared_data_t* shared_data, int64_t position) {
   int64_t counter = shared_data->sums_vector[position].sums;
@@ -191,7 +148,8 @@ void print_weak(shared_data_t* shared_data, int64_t position) {
 /**
  * @brief Imprime las sumas de la conjetura debil
  * @param shared_data struct shared_data_t
- * @param position para saber la posicion dentro edl vector de Sums
+ * @param position posicion entro del vector de Sums
+ * @return void
  */
 void print_strong(shared_data_t* shared_data, int64_t position) {
   int64_t counter = shared_data->sums_vector[position].sums;

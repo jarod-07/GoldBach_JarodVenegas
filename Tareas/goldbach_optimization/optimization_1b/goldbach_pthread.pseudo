@@ -28,7 +28,6 @@ main(argc, argv[]):
         
         size
         input_number(shared_data, size)
-        create_prime_vector(shared_data, size)
         create_threads(shared_data number_counter, run_thread)
         complete_structure(shared_data)
         print(shared_data sums_vector)
@@ -60,32 +59,6 @@ run_thread:
   for i = 0 to shared_data->number_counter
     private_data->goldbach_number = shared_data->numbers_vec[i]
     goldbach(private_data, i)
-
-create_prime_vector:
-  // Se crea un vector con el numero mas grande de los numeros ingresados
-  shared_data->prime_vector[2] = 1;
-  // Por si el numero es impar
-  if (even_odd(size) == 0)
-    size = size - 1;
-  end if
-  for (int64_t i = 1; i <= size / 2; i = i + 3) 
-    // Aqui se revisan solo los numeros impares que son los posibles primos
-
-    // Revisa el impar mas proximo
-    if (is_prime((i * 2) + 1)) 
-      shared_data->prime_vector[(i * 2) + 1] = 1;
-    end if
-
-    // Revisa el siguiente impar del anterior
-    if (is_prime((i * 2) + 3)) 
-      shared_data->prime_vector[(i * 2) + 3] = 1;
-    end if
-
-    // Revisa el siguiente impar del anterior
-    if (is_prime((i * 2) + 5))
-      shared_data->prime_vector[(i * 2) + 5] = 1;
-    end if
-  end for
 
 -----------Ejemplos--------------
 

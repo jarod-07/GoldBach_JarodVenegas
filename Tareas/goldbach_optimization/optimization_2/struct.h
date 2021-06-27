@@ -1,9 +1,9 @@
 /**
- * @file goldbach_pthread.h
+ * @file struct.h
  * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
- * @brief Contiene las estructuras del programa
+ * @brief Continene las estrcuturas
  * @version 1.0
- * @date 2021-05-30
+ * @date 2021-06-27
  *
  * @copyright Copyright (c) 2021
  *
@@ -42,9 +42,9 @@ typedef struct {
  */
 typedef struct {
   Sums* sums_vector;
-  int64_t number_counter;
   int64_t* numbers_vec;
-  int64_t thread_position;
+  int64_t* prime_vector;
+  int64_t number_counter;
   int64_t number_of_threads;
 } shared_data_t;
 

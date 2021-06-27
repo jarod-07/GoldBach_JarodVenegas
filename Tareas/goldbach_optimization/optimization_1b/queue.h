@@ -32,6 +32,7 @@ typedef struct queue_node {
  *
  */
 typedef struct {
+  pthread_mutex_t can_access_queue;
   queue_node_t* head;
   queue_node_t* tail;
 } queue_t;
@@ -39,9 +40,9 @@ typedef struct {
 /**
  *  This subroutine is NOT thread-safe
  */
-void queue_init(queue_t* queue);
+int queue_init(queue_t* queue);
 
-void queue_destroy(queue_t* queue);
+int queue_destroy(queue_t* queue);
 
 bool queue_is_empty(queue_t* queue);
 int64_t queue_enqueue(queue_t* queue, const int64_t data);
