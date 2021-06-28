@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "stdlib.h": "c",
-        "goldbach_operation.h": "c"
-    }
-}
