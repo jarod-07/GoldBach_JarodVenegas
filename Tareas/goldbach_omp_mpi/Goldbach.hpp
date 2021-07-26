@@ -1,11 +1,24 @@
+/**
+ * @file Goldbach.hpp
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Aplica las respectivas conjeturas de golbach y maneja la parte de
+ * OpenMp
+ * @version 1.0
+ * @date 2021-07-27
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #ifndef GOLDBACH_
 #define GOLDBACH_
 
-#include "Intefaz.hpp"
-#include "Structs.hpp"
-#include "math.h"
+#include <iostream>
+
+#include "Interfaz.hpp"
 #include "omp.h"
+#include "Struct.hpp"
 #include "unistd.h"
+
 class Goldbach {
  public:
   Goldbach();

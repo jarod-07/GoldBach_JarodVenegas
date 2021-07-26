@@ -1,13 +1,23 @@
+/**
+ * @file Goldbach_controller.cpp
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Controla la conjetura del goldbach y la parte del MPI
+ * @version 1.0
+ * @date 2021-07-27
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #include "Goldbach_controller.hpp"
 
 /**
- * @brief Construct a new Goldbach_controller::Goldbach_controller object
+ * @brief Construye un nuevo objeto Goldbach_controller
  *
  */
 Goldbach_controller::Goldbach_controller() {}
 
 /**
- * @brief Destroy the Goldbach_controller::Goldbach_controller object
+ * @brief Destruye un objeto Goldbach_controller
  *
  */
 Goldbach_controller::~Goldbach_controller() {}
@@ -24,7 +34,7 @@ void Goldbach_controller::set_threads(int num_threads) {
 /**
  * @brief Verifica si el numero ingresado es valido
  *
- * @param num
+ * @param number
  * @return true
  * @return false
  */
@@ -38,10 +48,10 @@ bool Goldbach_controller::is_valid(int64_t number) {
 }
 /**
  * @brief Calcula donde empiezan las iteraciones de un hilo
- * @param thread_id id del thread
- * @param number_of_threads cantidad de hilos
+ * @param process_rank id del process
+ * @param number_of_process cantidad de procesos
  * @param iterations cantidad de iteraciones
- * @param start donde empieza el hilo
+ * @param start donde empieza el proceso
  * @return int64_t
  */
 int64_t Goldbach_controller::where_to_begin(int64_t process_rank,
@@ -60,10 +70,10 @@ int64_t Goldbach_controller::where_to_begin(int64_t process_rank,
 
 /**
  * @brief Calcula donde terminan las iteraciones de un hilo
- * @param thread_id id del thread
- * @param number_of_threads cantidad de hilos
+ * @param process_rank id del process
+ * @param number_of_process cantidad de procesos
  * @param iterations cantidad de iteraciones
- * @param start donde empieza el hilo
+ * @param start donde empieza el proceso
  * @return int64_t
  */
 int64_t Goldbach_controller::where_to_end(int64_t process_rank,
@@ -77,9 +87,10 @@ int64_t Goldbach_controller::where_to_end(int64_t process_rank,
  * cantidad de numeros.
  *
  * @param goldbach_numbers vector de numeros
+ * @param prime_vector vector de primos
  * @param counter cantidad de numeros
  * @param my_rank id de cada proceso
- * @param process_count cantidad de procesos
+ * @param number_of_process cantidad de procesos
  * @return std::string
  */
 std::string Goldbach_controller::goldbach_conjecture(
@@ -124,7 +135,13 @@ std::string Goldbach_controller::goldbach_conjecture(
   free(data_of_number);
   return output;
 }
-
+/**
+ * @brief Crea un vector de primos. Se mapean los numeros con una relacion de
+ * 1:1, donde 1 significa que es primo y 0 que no es primo
+ *
+ * @param prime_vector vector de primos
+ * @param size tamaño del vector
+ */
 void Goldbach_controller::create_prime_vector(
     std::vector<int64_t>& prime_vector, int64_t size) {
   prime_vector.resize(size);

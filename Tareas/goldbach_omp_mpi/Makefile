@@ -67,4 +67,4 @@ gitignore:
 
 .PHONY: clean
 clean:
-	rm -rf bin/ build/ *.txt
+	rm -rf bin/ build/ doc/ *.txt

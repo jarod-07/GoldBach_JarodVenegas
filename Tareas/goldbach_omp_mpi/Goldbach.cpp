@@ -1,8 +1,27 @@
+/**
+ * @file Goldbach.cpp
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Aplica las respectivas conjeturas de golbach y maneja la parte de
+ * OpenMp
+ * @version 1.0
+ * @date 2021-07-27
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+
 #include "Goldbach.hpp"
 
-#include <iostream>
+/**
+ * @brief Construye un nuevo objeto Goldbach
+ *
+ */
 Goldbach::Goldbach() {}
 
+/**
+ * @brief Destruye un objeto Goldbach
+ *
+ */
 Goldbach::~Goldbach() {}
 
 /**
@@ -44,10 +63,12 @@ bool Goldbach::even_odd(int64_t number) {
 }
 
 /**
- * @brief Calcula las sumas pares de goldbach. Se utiliza OpenMp para repartir
+ * @brief Calcula las sumas impares de goldbach. Se utiliza OpenMp para repartir
  * el trabajo entre los hilos.
- *
- * @param data
+ * 
+ * @param data 
+ * @param prime_vector 
+ * @param number_of_threads 
  */
 void Goldbach::strong_conjecture(Data_of_number& data,
                                  std::vector<int64_t> prime_vector,
@@ -73,7 +94,8 @@ void Goldbach::strong_conjecture(Data_of_number& data,
     for (int64_t x = 2; x <= number_temp / 2; x++) {
       if (prime_vector[x] == 1) {
         posible_number = number_temp - x;
-        if (x + posible_number == number_temp && prime_vector[posible_number] == 1) {
+        if (x + posible_number == number_temp &&
+            prime_vector[posible_number] == 1) {
           if (posible_number > 2 && posible_number >= x) {
             if (number < 0) {
               if (counter == size) {
@@ -100,8 +122,10 @@ void Goldbach::strong_conjecture(Data_of_number& data,
 /**
  * @brief Calcula las sumas impares de goldbach. Se utiliza OpenMp para repartir
  * el trabajo entre los hilos.
- *
- * @param data
+ * 
+ * @param data 
+ * @param prime_vector 
+ * @param number_of_threads 
  */
 void Goldbach::weak_conjecture(Data_of_number& data,
                                std::vector<int64_t> prime_vector,

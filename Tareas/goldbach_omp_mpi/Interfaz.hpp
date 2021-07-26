@@ -1,11 +1,21 @@
+/**
+ * @file Interfaz.cpp
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Maneja todo lo que hace interaccion con el usuario
+ * @version 1.0
+ * @date 2021-07-27
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
 #ifndef INTERFAZ_
 #define INTERFAZ_
-#include <inttypes.h>
 
+#include <inttypes.h>
 #include <string>
 #include <vector>
 
-#include "Structs.hpp"
+#include "Struct.hpp"
 #include "unistd.h"
 
 class Interfaz {

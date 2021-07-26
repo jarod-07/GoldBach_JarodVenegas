@@ -1,7 +1,35 @@
-#include "Intefaz.hpp"
+/**
+ * @file Interfaz.cpp
+ * @author Jarod Venegas Alpizar (JAROD.VENEGAS@ucr.ac.cr)
+ * @brief Maneja todo lo que hace interaccion con el usuario
+ * @version 1.0
+ * @date 2021-07-27
+ *
+ * @copyright Copyright (c) 2021
+ *
+ */
+#include "Interfaz.hpp"
+
+/**
+ * @brief Construye un nuevo objeto Interfaz
+ *
+ */
 Interfaz::Interfaz(){};
+
+/**
+ * @brief Destruye un objeto Interfaz
+ *
+ */
 Interfaz::~Interfaz(){};
 
+/**
+ * @brief Almacena los numeros ingresados por el usuario dentro de un vector de
+ * numeros
+ *
+ * @param vector_of_numbers
+ * @param counter_of_numbers
+ * @param size_of_prime tamaño del vector de primos
+ */
 void Interfaz::input_numbers(std::vector<int64_t> &vector_of_numbers,
                              int64_t &counter_of_numbers,
                              int64_t &size_of_prime) {
@@ -28,6 +56,13 @@ void Interfaz::input_numbers(std::vector<int64_t> &vector_of_numbers,
   }
 }
 
+/**
+ * @brief Crea una hilera con las sumas de los numeros pares ingresados
+ *
+ * @param data struct Data
+ * @param threads cantidad de hilos
+ * @return std::string
+ */
 std::string Interfaz::toString_even(Data_of_number data, int threads) {
   std::string output = std::to_string(data.number) + ": ";
   int64_t total_sums = 0;
@@ -68,6 +103,13 @@ std::string Interfaz::toString_even(Data_of_number data, int threads) {
   return output;
 }
 
+/**
+ * @brief Crea una hilera con las sumas de los numeros impares ingresados
+ *
+ * @param data struct Data
+ * @param threads cantidad de hilos
+ * @return std::string
+ */
 std::string Interfaz::toString_odd(Data_of_number data, int threads) {
   std::string output = std::to_string(data.number) + ": ";
   int64_t total_sums = 0;
