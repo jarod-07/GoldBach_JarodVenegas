@@ -102,7 +102,6 @@ std::string Goldbach_controller::goldbach_conjecture(
 
   // Para luego imprimir las sumas
   std::string output = "";
-
   // Inicializar el vector de las sumas hechas por cada hilo
   for (int i = 0; i < counter; i++) {
     data_of_number[i].sums_by_threads =
@@ -144,13 +143,16 @@ std::string Goldbach_controller::goldbach_conjecture(
  */
 void Goldbach_controller::create_prime_vector(
     std::vector<int64_t>& prime_vector, int64_t size) {
-  prime_vector.resize(size);
+  prime_vector.resize(size+5);
   // Se crea un vector con el numero mas grande de los numeros ingresados
   prime_vector[2] = 1;
   // Por si el numero es impar
   if (goldbach.even_odd(size) == 0) {
-    size = size - 1;
+    size = size - 2;
+  }else{
+    size = size - 3;
   }
+
 
   for (int64_t i = 1; i <= size / 2; i = i + 3) {
     // Aqui se revisan solo los numeros impares que son los posibles primos

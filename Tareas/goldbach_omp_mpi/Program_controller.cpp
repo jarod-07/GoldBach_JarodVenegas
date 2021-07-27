@@ -35,7 +35,7 @@ Program_controller::~Program_controller() {}
  */
 int Program_controller::get_num_threads(int argc, char *argv[]) {
   int threads_num = sysconf(_SC_NPROCESSORS_ONLN);
-  if (argc == 1) {
+  if (argc == 2) {
     threads_num = atoi(argv[1]);
   }
   return threads_num;
@@ -98,17 +98,17 @@ void Program_controller::run(int argc, char *argv[]) {
 
   // Para que los procesos impriman en orden (metodo visto en clase). Hay
   // comunicaion del proceso 0 con el resto de procesos y viceversa
-  int you_can_print = 0;
+  int print = 0;
   if (rank == 0) {
     std::cout << output;
     for (int i = 1; i < process_count; i++) {
-      MPI_Send(&you_can_print, 1, MPI_INT, i, 2020, MPI_COMM_WORLD);
-      MPI_Recv(&you_can_print, 1, MPI_INT, i, 2020, MPI_COMM_WORLD, &status);
+      MPI_Send(&print, 1, MPI_INT, i, 2020, MPI_COMM_WORLD);
+      MPI_Recv(&print, 1, MPI_INT, i, 2020, MPI_COMM_WORLD, &status);
     }
   } else {
-    MPI_Recv(&you_can_print, 1, MPI_INT, 0, 2020, MPI_COMM_WORLD, &status);
+    MPI_Recv(&print, 1, MPI_INT, 0, 2020, MPI_COMM_WORLD, &status);
     std::cout << output;
-    MPI_Send(&you_can_print, 1, MPI_INT, 0, 2020, MPI_COMM_WORLD);
+    MPI_Send(&print, 1, MPI_INT, 0, 2020, MPI_COMM_WORLD);
   }
   MPI_Finalize();
 }
